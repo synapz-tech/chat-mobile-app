@@ -1,12 +1,12 @@
-import { ExpoConfig, ConfigContext } from 'expo/config';
+import { ConfigContext, ExpoConfig } from 'expo/config';
 
 export default ({ config }: ConfigContext): ExpoConfig => {
   return {
-    name: 'Chatwoot',
-    slug: process.env.EXPO_PUBLIC_APP_SLUG || 'chatwoot-mobile',
+    name: 'Synapz Chat',
+    slug: process.env.EXPO_PUBLIC_APP_SLUG || 'synapz-mobile',
     version: '4.1.2',
     orientation: 'portrait',
-    icon: './assets/icon.png',
+    icon: './assets/icon-new.png',
     userInterfaceStyle: 'light',
     newArchEnabled: false,
     splash: {
@@ -17,7 +17,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     },
     ios: {
       supportsTablet: true,
-      bundleIdentifier: 'com.chatwoot.app',
+      bundleIdentifier: 'com.synpaz.chat',
       infoPlist: {
         NSCameraUsageDescription:
           'This app requires access to the camera to upload images and videos.',
@@ -35,8 +35,11 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       associatedDomains: ['applinks:app.chatwoot.com'],
     },
     android: {
-      adaptiveIcon: { foregroundImage: './assets/adaptive-icon.png', backgroundColor: '#ffffff' },
-      package: 'com.chatwoot.app',
+      adaptiveIcon: {
+        foregroundImage: './assets/adaptive-icon-new.png',
+        backgroundColor: '#ffffff',
+      },
+      package: 'com.synapz.chat',
       permissions: [
         'android.permission.CAMERA',
         'android.permission.READ_EXTERNAL_STORAGE',
