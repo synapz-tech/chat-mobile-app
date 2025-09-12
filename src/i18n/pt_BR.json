@@ -454,5 +454,10 @@
     "EXECUTION_SUCCESS": "Macro executada com sucesso",
     "EXECUTION_ERROR": "Falha ao executar macro",
     "NO_MACROS": "Nenhuma macro encontrada"
+  },
+  "VERSION_CHECK": {
+    "TITLE": "Atualização Necessária",
+    "MESSAGE": "Por favor, atualize para a versão {{version}} ou superior para continuar usando o aplicativo.",
+    "OK": "OK"
   }
 }

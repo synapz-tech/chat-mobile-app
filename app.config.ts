@@ -3,7 +3,7 @@ import { ConfigContext, ExpoConfig } from 'expo/config';
 export default ({ config }: ConfigContext): ExpoConfig => {
   return {
     name: 'Synapz Chat',
-    slug: process.env.EXPO_PUBLIC_APP_SLUG || 'synapz-mobile',
+    slug: process.env.EXPO_PUBLIC_APP_SLUG || 'synapz-chat',
     version: '4.1.2',
     orientation: 'portrait',
     icon: './assets/icon-new.png',
@@ -32,7 +32,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       // Please use the relative path to the google-services.json file
       googleServicesFile: process.env.EXPO_PUBLIC_IOS_GOOGLE_SERVICES_FILE,
       entitlements: { 'aps-environment': 'production' },
-      associatedDomains: ['applinks:app.chatwoot.com'],
+      associatedDomains: ['applinks:chat.synapz.tech'],
     },
     android: {
       adaptiveIcon: {
@@ -56,7 +56,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
           data: [
             {
               scheme: 'https',
-              host: 'app.chatwoot.com',
+              host: 'chat.synapz.tech',
               pathPrefix: '/app/accounts/',
               pathPattern: '/*/conversations/*',
             },
@@ -67,22 +67,22 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     },
     extra: {
       eas: {
-        projectId: process.env.EXPO_PUBLIC_PROJECT_ID,
+        projectId: process.env.EXPO_PUBLIC_PROJECT_ID || '8333f67c-4e5c-473b-91d3-31ffc09234a7',
         storybookEnabled: process.env.EXPO_STORYBOOK_ENABLED,
       },
     },
-    owner: 'chatwoot',
+    // owner: 'synapz-chat', // Comentado temporariamente para build local
     plugins: [
       'expo-font',
       ['react-native-permissions', { iosPermissions: ['Camera', 'PhotoLibrary', 'MediaLibrary'] }],
-      [
-        '@sentry/react-native/expo',
-        {
-          url: 'https://sentry.io/',
-          project: process.env.EXPO_PUBLIC_SENTRY_PROJECT_NAME,
-          organization: process.env.EXPO_PUBLIC_SENTRY_ORG_NAME,
-        },
-      ],
+      // [
+      //   '@sentry/react-native/expo',
+      //   {
+      //     url: 'https://sentry.io/',
+      //     project: process.env.EXPO_PUBLIC_SENTRY_PROJECT_NAME,
+      //     organization: process.env.EXPO_PUBLIC_SENTRY_ORG_NAME,
+      //   },
+      // ], // Comentado temporariamente para build local
       '@react-native-firebase/app',
       '@react-native-firebase/messaging',
       [

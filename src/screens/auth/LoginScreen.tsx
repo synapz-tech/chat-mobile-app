@@ -1,37 +1,38 @@
-import React, { useEffect, useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
-import { Animated, Image, Pressable, StatusBar, TextInput, View } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 import {
   BottomSheetModal,
   BottomSheetScrollView,
   useBottomSheetSpringConfigs,
 } from '@gorhom/bottom-sheet';
+import { useNavigation } from '@react-navigation/native';
+import React, { useEffect, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { Animated, Image, Pressable, StatusBar, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { EMAIL_REGEX } from '@/constants';
+import { useAppDispatch, useAppSelector, useVersionCheck } from '@/hooks';
+import i18n from '@/i18n';
+import { authActions } from '@/store/auth/authActions';
+import { resetAuth } from '@/store/auth/authSlice';
 import { EyeIcon, EyeSlash } from '@/svg-icons';
 import { tailwind } from '@/theme';
-import i18n from '@/i18n';
-import { resetAuth } from '@/store/auth/authSlice';
-import { authActions } from '@/store/auth/authActions';
-import { useAppDispatch, useAppSelector } from '@/hooks';
 
 import {
   BottomSheetBackdrop,
   BottomSheetHeader,
-  LanguageList,
   Button,
   Icon,
+  LanguageList,
+  VersionBlockModal,
 } from '@/components-next';
+import { useRefsContext } from '@/context/RefsContext';
+import { selectIsLoggingIn } from '@/store/auth/authSelectors';
 import {
-  selectInstallationUrl,
   selectBaseUrl,
+  selectInstallationUrl,
   selectLocale,
 } from '@/store/settings/settingsSelectors';
-import { selectIsLoggingIn } from '@/store/auth/authSelectors';
 import { setLocale } from '@/store/settings/settingsSlice';
-import { useRefsContext } from '@/context/RefsContext';
 
 type FormData = {
   email: string;
@@ -53,6 +54,7 @@ const LoginScreen = () => {
   });
 
   const { languagesModalSheetRef } = useRefsContext();
+  const { versionCheckResult, isLoading: isVersionCheckLoading } = useVersionCheck();
 
   const animationConfigs = useBottomSheetSpringConfigs({
     mass: 1,
@@ -82,6 +84,11 @@ const LoginScreen = () => {
   }, [installationUrl, navigation, dispatch]);
 
   const onSubmit = async (data: FormData) => {
+    // Block login if version is not supported
+    if (versionCheckResult && !versionCheckResult.isVersionSupported) {
+      return;
+    }
+
     const { email, password } = data;
     dispatch(authActions.login({ email, password }));
   };
@@ -220,6 +227,11 @@ const LoginScreen = () => {
           <Button
             text={isLoggingIn ? i18n.t('LOGIN.LOGIN_LOADING') : i18n.t('LOGIN.LOGIN')}
             handlePress={handleSubmit(onSubmit)}
+            disabled={
+              isLoggingIn ||
+              isVersionCheckLoading ||
+              !!(versionCheckResult && !versionCheckResult.isVersionSupported)
+            }
           />
 
           <Pressable
@@ -253,6 +265,15 @@ const LoginScreen = () => {
           <LanguageList onChangeLanguage={onChangeLanguage} currentLanguage={activeLocale} />
         </BottomSheetScrollView>
       </BottomSheetModal>
+
+      {/* Version Check Modal */}
+      {versionCheckResult && !versionCheckResult.isVersionSupported && (
+        <VersionBlockModal
+          visible={true}
+          minVersion={versionCheckResult.minVersion}
+          currentVersion={versionCheckResult.currentVersion}
+        />
+      )}
     </SafeAreaView>
   );
 };

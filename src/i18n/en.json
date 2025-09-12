@@ -455,5 +455,10 @@
     "EXECUTION_SUCCESS": "Macro executed successfully",
     "EXECUTION_ERROR": "Macro execution failed",
     "NO_MACROS": "No macros found"
+  },
+  "VERSION_CHECK": {
+    "TITLE": "Update Required",
+    "MESSAGE": "Please update to version {{version}} or higher to continue using the app.",
+    "OK": "OK"
   }
 }

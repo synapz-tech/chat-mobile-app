@@ -1,5 +1,5 @@
 {
-  "name": "@chatwoot/mobile-app",
+  "name": "@synapz-chat/mobile-app",
   "version": "4.1.2",
   "scripts": {
     "start": "expo start --dev-client",
@@ -47,6 +47,7 @@
     "@react-native-community/netinfo": "^11.4.1",
     "@react-native-firebase/app": "^21.7.1",
     "@react-native-firebase/messaging": "^21.7.1",
+    "@react-native-firebase/remote-config": "^21.7.1",
     "@react-native-menu/menu": "^1.2.0",
     "@react-navigation/bottom-tabs": "^6.6.1",
     "@react-navigation/native": "^6.1.18",

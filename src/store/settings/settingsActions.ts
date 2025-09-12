@@ -116,8 +116,6 @@ export const settingsActions = {
         await sleep(1000);
         const fcmToken = await messaging().getToken();
 
-        console.log(fcmToken);
-
         const pushData: PushPayload = {
           subscription_type: 'fcm',
           subscription_attributes: {
