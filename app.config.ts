@@ -92,7 +92,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
           android: {
             minSdkVersion: 24,
             compileSdkVersion: 35,
-            targetSdkVersion: 34,
+            targetSdkVersion: 35,
             enableProguardInReleaseBuilds: true,
           },
           ios: { useFrameworks: 'static' },
