@@ -1,5 +1,5 @@
-import { createSelector } from '@reduxjs/toolkit';
 import { RootState } from '@/store';
+import { createSelector } from '@reduxjs/toolkit';
 
 export const selectSettings = (state: RootState) => state.settings;
 
@@ -32,7 +32,7 @@ export const selectWebSocketUrl = createSelector(selectSettings, settings => set
 export const selectTheme = createSelector(selectSettings, settings => settings.theme);
 
 export const selectIsChatwootCloud = createSelector(selectSettings, settings =>
-  settings.installationUrl.includes('app.chatwoot.com'),
+  settings.installationUrl.includes('chat.synapz.tech'),
 );
 
 export const selectChatwootVersion = createSelector(selectSettings, settings => settings.version);
