@@ -1,22 +1,22 @@
+import { Icon } from '@/components-next/common';
+import { MAXIMUM_FILE_UPLOAD_SIZE } from '@/constants';
+import { useRefsContext } from '@/context';
+import { useAppDispatch } from '@/hooks';
+import i18n from '@/i18n';
+import { updateAttachments } from '@/store/conversation/sendMessageSlice';
+import { AttachFileIcon, CameraIcon, MacrosIcon, PhotosIcon } from '@/svg-icons';
+import { tailwind } from '@/theme';
+import { useHaptic, useScaleAnimation } from '@/utils';
+import { findFileSize } from '@/utils/fileUtils';
+import { showToast } from '@/utils/toastUtils';
+import DocumentPicker, { DocumentPickerResponse } from '@react-native-documents/picker';
 import React from 'react';
 import { Alert, Linking, Platform, Pressable, Text } from 'react-native';
-import DocumentPicker, { DocumentPickerResponse } from 'react-native-document-picker';
+import { getApiLevel } from 'react-native-device-info';
 import { Asset, launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { PERMISSIONS, request, RESULTS } from 'react-native-permissions';
 import Animated, { SlideInDown, SlideOutDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useAppDispatch } from '@/hooks';
-import { updateAttachments } from '@/store/conversation/sendMessageSlice';
-import { useRefsContext } from '@/context';
-import { AttachFileIcon, CameraIcon, MacrosIcon, PhotosIcon } from '@/svg-icons';
-import { tailwind } from '@/theme';
-import { useHaptic, useScaleAnimation } from '@/utils';
-import { Icon } from '@/components-next/common';
-import { MAXIMUM_FILE_UPLOAD_SIZE } from '@/constants';
-import i18n from '@/i18n';
-import { showToast } from '@/utils/toastUtils';
-import { findFileSize } from '@/utils/fileUtils';
-import { getApiLevel } from 'react-native-device-info';
 
 export const handleOpenPhotosLibrary = async dispatch => {
   if (Platform.OS === 'ios') {

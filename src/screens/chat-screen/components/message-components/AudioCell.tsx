@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
-import { PlayBackType } from 'react-native-audio-recorder-player';
+import { PlayBackType } from 'react-native-nitro-sound';
 import Animated, { Easing, FadeIn, FadeOut, useSharedValue } from 'react-native-reanimated';
 import Svg, { Path, Rect } from 'react-native-svg';
 
@@ -9,17 +9,17 @@ import {
   setCurrentPlayingAudioSrc,
 } from '@/store/conversation/audioPlayerSlice';
 
+import { Avatar, Icon, Slider } from '@/components-next/common';
+import { Spinner } from '@/components-next/spinner';
+import { MESSAGE_TYPES } from '@/constants';
+import { useAppSelector } from '@/hooks';
 import { tailwind } from '@/theme';
 import { Channel, IconProps, Message, MessageStatus, UnixTimestamp } from '@/types';
 import { unixTimestampToReadableTime } from '@/utils';
-import { Avatar, Icon, Slider } from '@/components-next/common';
-import { Spinner } from '@/components-next/spinner';
+import { useDispatch } from 'react-redux';
 import { pausePlayer, resumePlayer, seekTo, startPlayer, stopPlayer } from '../audio-recorder';
 import { MenuOption, MessageMenu } from '../message-menu';
-import { MESSAGE_TYPES } from '@/constants';
 import { DeliveryStatus } from './DeliveryStatus';
-import { useDispatch } from 'react-redux';
-import { useAppSelector } from '@/hooks';
 
 export const PlayIcon = ({ fill, fillOpacity }: IconProps) => {
   return (

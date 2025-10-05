@@ -3,7 +3,7 @@
  * All credits goes the Awesome Developer [@vanGalilea](https://github.com/vanGalilea/vanGalilea)
  */
 
-import AudioRecorderPlayer, { PlayBackType } from 'react-native-audio-recorder-player';
+import AudioRecorderPlayer, { PlayBackType } from 'react-native-nitro-sound';
 
 export type Callback = (args: { status: AudioStatus; data?: PlayBackType }) => void;
 
@@ -16,6 +16,7 @@ export enum AudioStatus {
   RESUMED = 'RESUMED',
   STOPPED = 'STOPPED',
 }
+/
 
 let audioRecorderPlayer: AudioRecorderPlayer | undefined;
 let currentPath: Path;

@@ -8,7 +8,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     orientation: 'portrait',
     icon: './assets/icon-new.png',
     userInterfaceStyle: 'light',
-    newArchEnabled: false,
+    newArchEnabled: true,
     splash: {
       image: './assets/splash.png',
       resizeMode: 'contain',
@@ -95,7 +95,9 @@ export default ({ config }: ConfigContext): ExpoConfig => {
             targetSdkVersion: 35,
             enableProguardInReleaseBuilds: true,
           },
-          ios: { useFrameworks: 'static' },
+          ios: {
+            useFrameworks: 'static',
+          },
         },
       ],
       './with-ffmpeg-pod.js',

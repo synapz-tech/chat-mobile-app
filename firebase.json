@@ -1,6 +1,5 @@
 {
   "react-native": {
-    "messaging_ios_auto_register_for_remote_messages": true,
-    "analytics_auto_collection_enabled": true
+    "messaging_ios_auto_register_for_remote_messages": true
   }
 }
