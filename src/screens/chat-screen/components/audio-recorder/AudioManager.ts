@@ -16,7 +16,6 @@ export enum AudioStatus {
   RESUMED = 'RESUMED',
   STOPPED = 'STOPPED',
 }
-/
 
 let audioRecorderPlayer: AudioRecorderPlayer | undefined;
 let currentPath: Path;
