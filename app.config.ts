@@ -74,6 +74,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     // owner: 'synapz-chat', // Comentado temporariamente para build local
     plugins: [
       'expo-font',
+      'expo-web-browser',
       ['react-native-permissions', { iosPermissions: ['Camera', 'PhotoLibrary', 'MediaLibrary'] }],
       // [
       //   '@sentry/react-native/expo',
@@ -96,7 +97,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
             enableProguardInReleaseBuilds: true,
           },
           ios: {
-            useFrameworks: 'static',
+            useFrameworks: 'dynamic',
           },
         },
       ],
