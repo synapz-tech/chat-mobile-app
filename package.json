@@ -45,7 +45,6 @@
     "@react-native-clipboard/clipboard": "^1.6.1",
     "@react-native-community/blur": "^4.4.1",
     "@react-native-community/netinfo": "^11.4.1",
-    "@react-native-documents/picker": "^10.1.7",
     "@react-native-firebase/app": "^21.7.1",
     "@react-native-firebase/messaging": "^21.7.1",
     "@react-native-firebase/remote-config": "^21.12.0",
@@ -94,6 +93,7 @@
     "react-native-ios-utilities": "^5.1.1",
     "react-native-keyboard-controller": "^1.16.0",
     "react-native-markdown-display": "^7.0.0-alpha.2",
+    "react-native-nitro-sound": "^0.2.8",
     "react-native-pager-view": "^6.5.1",
     "react-native-permissions": "^5.2.4",
     "react-native-reanimated": "^3.16.7",
@@ -146,6 +146,7 @@
       "reactNativeDirectoryCheck": {
         "enabled": true,
         "exclude": [
+          "@react-native-documents/picker",
           "@kesha-antonov/react-native-action-cable",
           "react-native-audio-recorder-player",
           "react-native-document-picker",
