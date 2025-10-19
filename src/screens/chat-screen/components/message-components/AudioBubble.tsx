@@ -1,7 +1,7 @@
 import * as Sentry from '@sentry/react-native';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Platform, Pressable, View } from 'react-native';
-import { PlayBackType } from 'react-native-nitro-sound';
+import { PlayBackType } from 'react-native-audio-recorder-player';
 import Animated, { FadeIn, FadeOut, useSharedValue } from 'react-native-reanimated';
 import Svg, { Path, Rect } from 'react-native-svg';
 

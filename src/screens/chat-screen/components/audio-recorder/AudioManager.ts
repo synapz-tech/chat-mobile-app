@@ -3,7 +3,7 @@
  * All credits goes the Awesome Developer [@vanGalilea](https://github.com/vanGalilea/vanGalilea)
  */
 
-import AudioRecorderPlayer, { PlayBackType } from 'react-native-nitro-sound';
+import AudioRecorderPlayer, { PlayBackType } from 'react-native-audio-recorder-player';
 
 export type Callback = (args: { status: AudioStatus; data?: PlayBackType }) => void;
 

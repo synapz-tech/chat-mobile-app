@@ -2,7 +2,7 @@ import * as Sentry from '@sentry/react-native';
 import { isUndefined } from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { Alert, Dimensions, PermissionsAndroid, Platform, Pressable } from 'react-native';
-import AudioRecorderPlayer, { RecordBackType } from 'react-native-nitro-sound';
+import AudioRecorderPlayer, { RecordBackType } from 'react-native-audio-recorder-player';
 import Animated, { SlideInDown, SlideOutDown } from 'react-native-reanimated';
 import RNFetchBlob from 'rn-fetch-blob';
 

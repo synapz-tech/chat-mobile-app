@@ -100,6 +100,7 @@ export const AppNavigationContainer = () => {
 
       // getInitialNotification: When the application is opened from a quit state.
       const message = await messaging().getInitialNotification();
+
       if (message) {
         const notification = findNotificationFromFCM({ message });
         const camelCaseNotification = transformNotification(notification);

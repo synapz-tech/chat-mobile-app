@@ -89,9 +89,7 @@ export const settingsActions = {
     'settings/saveDeviceDetails',
     async (_, { rejectWithValue }) => {
       try {
-        console.log('FCM Permission enabled');
         const permissionEnabled = await messaging().hasPermission();
-
         const deviceId = await getUniqueId();
         const devicePlatform = getSystemName();
         const manufacturer = await getManufacturer();
