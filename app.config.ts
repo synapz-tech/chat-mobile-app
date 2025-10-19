@@ -9,6 +9,9 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     icon: './assets/icon-new.png',
     userInterfaceStyle: 'light',
     newArchEnabled: false,
+    notification: {
+      icon: './assets/notification-image.png',
+    },
     splash: {
       image: './assets/splash.png',
       resizeMode: 'contain',
