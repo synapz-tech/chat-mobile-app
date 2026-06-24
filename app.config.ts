@@ -4,7 +4,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
   return {
     name: 'Synapz Chat',
     slug: process.env.EXPO_PUBLIC_APP_SLUG || 'synapz-chat',
-    version: '4.1.2',
+    version: '4.7.0',
     orientation: 'portrait',
     icon: './assets/icon-new.png',
     userInterfaceStyle: 'light',
