@@ -23,10 +23,11 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       bundleIdentifier: 'com.synapz.chat',
       infoPlist: {
         NSCameraUsageDescription:
-          'This app requires access to the camera to upload images and videos.',
+          'O aplicativo usa a câmera para tirar fotos e gravar vídeos que podem ser enviados nas conversas de atendimento com o suporte.',
         NSPhotoLibraryUsageDescription:
-          'This app requires access to the photo library to upload images.',
-        NSMicrophoneUsageDescription: 'This app requires access to the microphone to record audio.',
+          'O aplicativo acessa sua galeria para permitir o envio de imagens existentes nas conversas com o suporte.',
+        NSMicrophoneUsageDescription:
+          'O aplicativo utiliza o microfone para gravar áudios e enviá-los nas conversas de atendimento.',
         NSAppleMusicUsageDescription:
           'This app does not use Apple Music, but a system API may require this permission.',
         UIBackgroundModes: ['fetch', 'remote-notification'],
