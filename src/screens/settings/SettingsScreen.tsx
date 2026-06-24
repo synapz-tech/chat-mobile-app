@@ -21,6 +21,8 @@ import * as WebBrowser from 'expo-web-browser';
 import DeviceInfo from 'react-native-device-info';
 import { useSelector } from 'react-redux';
 
+import { clearSearchResults } from '@/store/search/searchSlice';
+import { RecentSearches } from '@/screens/search/utils/recentSearches';
 import { HELP_URL } from '@/constants/url';
 import { tailwind } from '@/theme';
 import i18n from 'i18n';
@@ -173,6 +175,7 @@ const SettingsScreen = () => {
     dispatch(clearAllContacts());
     dispatch(clearAllConversations());
     dispatch(resetNotifications());
+    dispatch(clearSearchResults());
     dispatch(setAccount(accountId));
     dispatch(authActions.setActiveAccount({ profile: { account_id: accountId } }));
     navigation.dispatch(StackActions.replace('Tab'));
@@ -206,6 +209,7 @@ const SettingsScreen = () => {
 
   const onClickLogout = useCallback(async () => {
     await AsyncStorage.removeItem('cwCookie');
+    await RecentSearches.clearAll();
     await dispatch(settingsActions.removeDevice({ pushToken }));
     dispatch(logout());
   }, [dispatch, pushToken]);

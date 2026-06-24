@@ -12,6 +12,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     notification: {
       icon: './assets/notification-image.png',
     },
+    scheme: 'chatwootapp',
     splash: {
       image: './assets/splash.png',
       resizeMode: 'contain',
@@ -63,6 +64,15 @@ export default ({ config }: ConfigContext): ExpoConfig => {
               host: 'chat.synapz.tech',
               pathPrefix: '/app/accounts/',
               pathPattern: '/*/conversations/*',
+            },
+          ],
+          category: ['BROWSABLE', 'DEFAULT'],
+        },
+        {
+          action: 'VIEW',
+          data: [
+            {
+              scheme: 'chatwootapp',
             },
           ],
           category: ['BROWSABLE', 'DEFAULT'],

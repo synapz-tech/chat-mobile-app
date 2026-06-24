@@ -6,4 +6,5 @@ export * from './list-components';
 export * from './no-network';
 export * from './sheet-components';
 export * from './spinner';
+export * from './verification-code';
 export * from './version-check';

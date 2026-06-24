@@ -16,6 +16,7 @@ import { MESSAGE_VARIANTS } from '@/constants';
 import { useAppSelector } from '@/hooks';
 import { tailwind } from '@/theme';
 import { IconProps } from '@/types';
+// eslint-disable-next-line import/no-unresolved
 import { convertOggToWav } from '@/utils/audioConverter';
 import { useDispatch } from 'react-redux';
 import { pausePlayer, resumePlayer, seekTo, startPlayer, stopPlayer } from '../audio-recorder';
