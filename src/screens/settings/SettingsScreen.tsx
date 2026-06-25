@@ -171,13 +171,17 @@ const SettingsScreen = () => {
     dispatch(setLocale(locale));
   };
 
-  const changeAccount = (accountId: number) => {
+  const changeAccount = async (accountId: number) => {
+    try {
+      await dispatch(authActions.setActiveAccount({ profile: { account_id: accountId } })).unwrap();
+    } catch {
+      return;
+    }
     dispatch(clearAllContacts());
     dispatch(clearAllConversations());
     dispatch(resetNotifications());
     dispatch(clearSearchResults());
     dispatch(setAccount(accountId));
-    dispatch(authActions.setActiveAccount({ profile: { account_id: accountId } }));
     navigation.dispatch(StackActions.replace('Tab'));
   };
 

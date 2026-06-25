@@ -123,6 +123,12 @@ export const authSlice = createSlice({
           ...action.payload,
         } as User;
       })
+      .addCase(authActions.setActiveAccount.fulfilled, (state, action) => {
+        state.user = {
+          ...state.user,
+          ...action.payload,
+        } as User;
+      })
       .addCase(authActions.login.rejected, (state, action) => {
         state.uiFlags.isLoggingIn = false;
         state.error = action.payload?.errors[0] ?? null;
