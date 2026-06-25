@@ -19,6 +19,9 @@ overrides:
   tar: 7.5.11
 
 patchedDependencies:
+  '@react-native-firebase/messaging@23.8.8':
+    hash: 7b21768f0251162d933be58c2001dcd1a6244bd0adf847b1a114e2c15174c281
+    path: patches/@react-native-firebase__messaging@23.8.8.patch
   ffmpeg-kit-react-native@6.0.2:
     hash: 0cc82646cedf0e8bf24e518594c46bedd028c52ac2045724f76c8dd883a7d7b1
     path: patches/ffmpeg-kit-react-native.patch
@@ -66,12 +69,15 @@ importers:
       '@react-native-documents/picker':
         specifier: ^12.0.1
         version: 12.0.1(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0)
+      '@react-native-firebase/analytics':
+        specifier: ^23.8.8
+        version: 23.8.8(@react-native-firebase/app@23.8.8(@react-native-async-storage/async-storage@2.1.2(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0)))(expo@53.0.27(@babel/core@7.27.1)(react-native-webview@13.13.5(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))
       '@react-native-firebase/app':
         specifier: ^23.8.8
         version: 23.8.8(@react-native-async-storage/async-storage@2.1.2(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0)))(expo@53.0.27(@babel/core@7.27.1)(react-native-webview@13.13.5(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0)
       '@react-native-firebase/messaging':
         specifier: ^23.8.8
-        version: 23.8.8(@react-native-firebase/app@23.8.8(@react-native-async-storage/async-storage@2.1.2(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0)))(expo@53.0.27(@babel/core@7.27.1)(react-native-webview@13.13.5(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))(expo@53.0.27(@babel/core@7.27.1)(react-native-webview@13.13.5(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))
+        version: 23.8.8(patch_hash=7b21768f0251162d933be58c2001dcd1a6244bd0adf847b1a114e2c15174c281)(@react-native-firebase/app@23.8.8(@react-native-async-storage/async-storage@2.1.2(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0)))(expo@53.0.27(@babel/core@7.27.1)(react-native-webview@13.13.5(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))(expo@53.0.27(@babel/core@7.27.1)(react-native-webview@13.13.5(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))
       '@react-native-firebase/remote-config':
         specifier: ^23.8.8
         version: 23.8.8(137064ffc93d73fa301e6ee0b016fae8)
@@ -275,17 +281,17 @@ importers:
         specifier: ^7.20.0
         version: 7.27.1
       '@react-native-community/datetimepicker':
-        specifier: ^8.2.0
-        version: 8.2.0(expo@53.0.27(@babel/core@7.27.1)(react-native-webview@13.13.5(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0)
+        specifier: 8.4.1
+        version: 8.4.1(expo@53.0.27(@babel/core@7.27.1)(react-native-webview@13.13.5(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0)
       '@react-native-community/slider':
-        specifier: ^4.5.5
-        version: 4.5.5
+        specifier: 4.5.6
+        version: 4.5.6
       '@storybook/addon-ondevice-actions':
         specifier: ^8.6.2
         version: 8.6.2(prettier@3.5.3)(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0)(storybook@8.6.17(prettier@3.5.3))
       '@storybook/addon-ondevice-controls':
         specifier: ^8.6.2
-        version: 8.6.2(7d83405214170a3895c2cc8772c4b66e)
+        version: 8.6.2(4ba3d072ac2cf57e4b80a9040cea33cc)
       '@storybook/react-native':
         specifier: ^8.6.2
         version: 8.6.2(7b40057a5ae2de2e721ea7b39bd19a1f)
@@ -1944,10 +1950,10 @@ packages:
       react: '*'
       react-native: '*'
 
-  '@react-native-community/datetimepicker@8.2.0':
-    resolution: {integrity: sha512-qrUPhiBvKGuG9Y+vOqsc56RPFcHa1SU2qbAMT0hfGkoFIj3FodE0VuPVrEa8fgy7kcD5NQmkZIKgHOBLV0+hWg==}
+  '@react-native-community/datetimepicker@8.4.1':
+    resolution: {integrity: sha512-DrK+CUS5fZnz8dhzBezirkzQTcNDdaXer3oDLh0z4nc2tbdIdnzwvXCvi8IEOIvleoc9L95xS5tKUl0/Xv71Mg==}
     peerDependencies:
-      expo: '>=50.0.0'
+      expo: '>=52.0.0'
       react: '*'
       react-native: '*'
       react-native-windows: '*'
@@ -1962,8 +1968,8 @@ packages:
     peerDependencies:
       react-native: '>=0.59'
 
-  '@react-native-community/slider@4.5.5':
-    resolution: {integrity: sha512-x2N415pg4ZxIltArOKczPwn7JEYh+1OxQ4+hTnafomnMsqs65HZuEWcX+Ch8c5r8V83DiunuQUf5hWGWlw8hQQ==}
+  '@react-native-community/slider@4.5.6':
+    resolution: {integrity: sha512-UhLPFeqx0YfPLrEz8ffT3uqAyXWu6iqFjohNsbp4cOU7hnJwg2RXtDnYHoHMr7MOkZDVdlLMdrSrAuzY6KGqrg==}
 
   '@react-native-documents/picker@12.0.1':
     resolution: {integrity: sha512-vpJKb4t/5bnxe9+gQl+plJfKrrIsmYwANGhNH2B9E1dS1+6FDBzg4Dwmcq4ueaGfkRKEPJ606mJttVEH1ZKZaA==}
@@ -8500,7 +8506,7 @@ snapshots:
       react: 19.0.0
       react-native: 0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0)
 
-  '@react-native-community/datetimepicker@8.2.0(expo@53.0.27(@babel/core@7.27.1)(react-native-webview@13.13.5(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0)':
+  '@react-native-community/datetimepicker@8.4.1(expo@53.0.27(@babel/core@7.27.1)(react-native-webview@13.13.5(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0)':
     dependencies:
       invariant: 2.2.4
       react: 19.0.0
@@ -8512,7 +8518,7 @@ snapshots:
     dependencies:
       react-native: 0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0)
 
-  '@react-native-community/slider@4.5.5': {}
+  '@react-native-community/slider@4.5.6': {}
 
   '@react-native-documents/picker@12.0.1(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0)':
     dependencies:
@@ -8534,7 +8540,7 @@ snapshots:
     transitivePeerDependencies:
       - '@react-native-async-storage/async-storage'
 
-  '@react-native-firebase/messaging@23.8.8(@react-native-firebase/app@23.8.8(@react-native-async-storage/async-storage@2.1.2(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0)))(expo@53.0.27(@babel/core@7.27.1)(react-native-webview@13.13.5(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))(expo@53.0.27(@babel/core@7.27.1)(react-native-webview@13.13.5(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))':
+  '@react-native-firebase/messaging@23.8.8(patch_hash=7b21768f0251162d933be58c2001dcd1a6244bd0adf847b1a114e2c15174c281)(@react-native-firebase/app@23.8.8(@react-native-async-storage/async-storage@2.1.2(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0)))(expo@53.0.27(@babel/core@7.27.1)(react-native-webview@13.13.5(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))(expo@53.0.27(@babel/core@7.27.1)(react-native-webview@13.13.5(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))':
     dependencies:
       '@react-native-firebase/app': 23.8.8(@react-native-async-storage/async-storage@2.1.2(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0)))(expo@53.0.27(@babel/core@7.27.1)(react-native-webview@13.13.5(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0)
     optionalDependencies:
@@ -8899,11 +8905,11 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@storybook/addon-ondevice-controls@8.6.2(7d83405214170a3895c2cc8772c4b66e)':
+  '@storybook/addon-ondevice-controls@8.6.2(4ba3d072ac2cf57e4b80a9040cea33cc)':
     dependencies:
       '@gorhom/bottom-sheet': 5.1.4(@types/react@19.0.14)(react-native-gesture-handler@2.31.2(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))(react-native-reanimated@3.19.5(@babel/core@7.27.1)(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0)
-      '@react-native-community/datetimepicker': 8.2.0(expo@53.0.27(@babel/core@7.27.1)(react-native-webview@13.13.5(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0)
-      '@react-native-community/slider': 4.5.5
+      '@react-native-community/datetimepicker': 8.4.1(expo@53.0.27(@babel/core@7.27.1)(react-native-webview@13.13.5(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0)
+      '@react-native-community/slider': 4.5.6
       '@storybook/addon-controls': 8.6.12(storybook@8.6.17(prettier@3.5.3))
       '@storybook/core': 8.6.12(prettier@3.5.3)(storybook@8.6.17(prettier@3.5.3))
       '@storybook/react-native-theming': 8.6.2(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0)
@@ -8912,7 +8918,7 @@ snapshots:
       prop-types: 15.8.1
       react: 19.0.0
       react-native: 0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0)
-      react-native-modal-datetime-picker: 18.0.0(@react-native-community/datetimepicker@8.2.0(expo@53.0.27(@babel/core@7.27.1)(react-native-webview@13.13.5(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))
+      react-native-modal-datetime-picker: 18.0.0(@react-native-community/datetimepicker@8.4.1(expo@53.0.27(@babel/core@7.27.1)(react-native-webview@13.13.5(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))
       tinycolor2: 1.6.0
     transitivePeerDependencies:
       - '@storybook/test'
@@ -12669,9 +12675,9 @@ snapshots:
       react-native: 0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0)
       react-native-fit-image: 1.5.5
 
-  react-native-modal-datetime-picker@18.0.0(@react-native-community/datetimepicker@8.2.0(expo@53.0.27(@babel/core@7.27.1)(react-native-webview@13.13.5(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0)):
+  react-native-modal-datetime-picker@18.0.0(@react-native-community/datetimepicker@8.4.1(expo@53.0.27(@babel/core@7.27.1)(react-native-webview@13.13.5(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0)):
     dependencies:
-      '@react-native-community/datetimepicker': 8.2.0(expo@53.0.27(@babel/core@7.27.1)(react-native-webview@13.13.5(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0)
+      '@react-native-community/datetimepicker': 8.4.1(expo@53.0.27(@babel/core@7.27.1)(react-native-webview@13.13.5(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0))(react-native@0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0))(react@19.0.0)
       prop-types: 15.8.1
       react-native: 0.79.6(@babel/core@7.27.1)(@types/react@19.0.14)(react@19.0.0)
 

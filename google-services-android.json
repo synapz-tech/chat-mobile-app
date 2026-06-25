@@ -12,7 +12,12 @@
           "package_name": "com.synapz.chat"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "18515237774-7t468ctpm0cma36h32roj0semavu73tj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDADEY6p5kwE0Cvo1I6Vv_VZsw5G2Me0cs"
@@ -20,7 +25,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "18515237774-7t468ctpm0cma36h32roj0semavu73tj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
