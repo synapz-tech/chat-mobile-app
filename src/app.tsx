@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react';
-import { Provider } from 'react-redux';
-import { Alert, BackHandler } from 'react-native';
-import { PersistGate } from 'redux-persist/integration/react';
-import { store, persistor } from './store';
 import { AppNavigator } from '@/navigation';
+import React, { useEffect } from 'react';
+import { Alert, BackHandler } from 'react-native';
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
+import { persistor, store } from './store';
 
 import i18n from '@/i18n';
 

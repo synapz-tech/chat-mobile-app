@@ -1,26 +1,27 @@
+import * as Sentry from '@sentry/react-native';
+import { isUndefined } from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { Alert, Dimensions, PermissionsAndroid, Platform, Pressable } from 'react-native';
 import AudioRecorderPlayer, {
-  RecordBackType,
   AVEncodingOption,
+  RecordBackType,
 } from 'react-native-audio-recorder-player';
 import Animated, { SlideInDown, SlideOutDown } from 'react-native-reanimated';
-import { isUndefined } from 'lodash';
-import * as Sentry from '@sentry/react-native';
 import RNFetchBlob from 'rn-fetch-blob';
 
+import { Icon } from '@/components-next';
 import { TEXT_INPUT_CONTAINER_HEIGHT } from '@/constants';
 import { useChatWindowContext } from '@/context';
-import { SendIcon, Trash } from '@/svg-icons';
-import { tailwind } from '@/theme';
-import { Icon } from '@/components-next';
-import { PauseIcon, PlayIcon } from '../message-components';
 import { useAppDispatch, useAppSelector } from '@/hooks';
 import {
   addNewCachePath,
   selectLocalRecordedAudioCacheFilePaths,
 } from '@/store/conversation/localRecordedAudioCacheSlice';
-import { convertAacToWav } from '@/utils/audioConverter';
+import { SendIcon, Trash } from '@/svg-icons';
+import { tailwind } from '@/theme';
+import { convertAacToWav as convertAacToWavAndroid } from '@/utils/audioConverter.android';
+import { convertAacToWav as convertAacToWavIos } from '@/utils/audioConverter.ios';
+import { PauseIcon, PlayIcon } from '../message-components';
 
 const RecorderSegmentWidth = Dimensions.get('screen').width - 8 - 80 - 12;
 
@@ -163,7 +164,12 @@ export const AudioRecorder = ({
     const finalExtension = audioFormat === 'audio/wav' ? 'wav' : 'm4a';
 
     if (audioFormat === 'audio/wav') {
-      finalPath = await convertAacToWav(cleanPath);
+      if (Platform.OS === 'ios') {
+        finalPath = await convertAacToWavIos(cleanPath);
+      } else {
+        finalPath = await convertAacToWavAndroid(cleanPath);
+      }
+
       finalPath = finalPath.replace('file://', '');
     }
 

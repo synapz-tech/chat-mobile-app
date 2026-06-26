@@ -32,9 +32,11 @@ describe('Auth Slice', () => {
     uiFlags: {
       isLoggingIn: false,
       isResettingPassword: false,
+      isVerifyingMfa: false,
     },
     headers: null,
     error: null,
+    mfaToken: null,
   };
 
   const loggedInState = {
@@ -216,6 +218,17 @@ describe('Auth Slice', () => {
 
       expect(state.uiFlags.isLoggingIn).toBe(false);
       expect(state.error).toBe(error);
+    });
+
+    it('should merge user data when setActiveAccount succeeds', () => {
+      const state = { ...initialState, user: { ...userWithAccounts, account_id: 123 } };
+      const action = {
+        type: authActions.setActiveAccount.fulfilled.type,
+        payload: { ...userWithAccounts, account_id: 456 },
+      };
+      const nextState = authReducer(state, action);
+
+      expect(nextState.user?.account_id).toBe(456);
     });
   });
 });

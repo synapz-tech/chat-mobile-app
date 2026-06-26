@@ -1,37 +1,41 @@
-import React, { useEffect, useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
-import { Animated, Image, Pressable, StatusBar, TextInput, View } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 import {
   BottomSheetModal,
   BottomSheetScrollView,
   useBottomSheetSpringConfigs,
 } from '@gorhom/bottom-sheet';
+import { useNavigation } from '@react-navigation/native';
+import React, { useEffect, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { Animated, Image, Pressable, StatusBar, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 
 import { EMAIL_REGEX } from '@/constants';
-import { EyeIcon, EyeSlash } from '@/svg-icons';
-import { tailwind } from '@/theme';
+import { useAppDispatch, useAppSelector, useVersionCheck } from '@/hooks';
 import i18n from '@/i18n';
-import { resetAuth } from '@/store/auth/authSlice';
 import { authActions } from '@/store/auth/authActions';
-import { useAppDispatch, useAppSelector } from '@/hooks';
+import { resetAuth } from '@/store/auth/authSlice';
+import { EyeIcon, EyeSlash, LockIcon } from '@/svg-icons';
+import { tailwind } from '@/theme';
 
 import {
+  AuthButton,
   BottomSheetBackdrop,
   BottomSheetHeader,
-  LanguageList,
   Button,
   Icon,
+  LanguageList,
+  VersionBlockModal,
 } from '@/components-next';
+import { useRefsContext } from '@/context/RefsContext';
+import { selectIsLoggingIn } from '@/store/auth/authSelectors';
 import {
-  selectInstallationUrl,
   selectBaseUrl,
+  selectInstallationUrl,
   selectLocale,
 } from '@/store/settings/settingsSelectors';
-import { selectIsLoggingIn } from '@/store/auth/authSelectors';
 import { setLocale } from '@/store/settings/settingsSlice';
-import { useRefsContext } from '@/context/RefsContext';
+import { SsoUtils } from '@/utils/ssoUtils';
 
 type FormData = {
   email: string;
@@ -53,6 +57,7 @@ const LoginScreen = () => {
   });
 
   const { languagesModalSheetRef } = useRefsContext();
+  const { versionCheckResult, isLoading: isVersionCheckLoading } = useVersionCheck();
 
   const animationConfigs = useBottomSheetSpringConfigs({
     mass: 1,
@@ -82,9 +87,33 @@ const LoginScreen = () => {
   }, [installationUrl, navigation, dispatch]);
 
   const onSubmit = async (data: FormData) => {
+    // Block login if version is not supported
+    if (versionCheckResult && !versionCheckResult.isVersionSupported) {
+      return;
+    }
+
     const { email, password } = data;
-    dispatch(authActions.login({ email, password }));
+    // Clear any existing auth state before login
+    dispatch(resetAuth());
+
+    try {
+      const result = await dispatch(authActions.login({ email, password })).unwrap();
+
+      // Check if MFA is required in the response
+      if ('mfa_required' in result && result.mfa_required) {
+        // Navigate directly to MFA screen with the token
+        navigation.navigate('MFAScreen' as never);
+      }
+      // If MFA not required, the auth state will be updated and
+      // the app will automatically navigate to the dashboard
+    } catch {
+      // Login error is handled by Redux and displayed in the UI
+    }
   };
+
+  // TODO: Change this condition based on EE check
+  // Show SSO login button only if installation URL contains app.chatwoot.com
+  const showSsoLogin = installationUrl.includes('app.chatwoot.com');
 
   const openResetPassword = () => {
     navigation.navigate('ResetPassword' as never);
@@ -98,6 +127,24 @@ const LoginScreen = () => {
     dispatch(setLocale(locale));
   };
 
+  const handleSsoLogin = async () => {
+    if (!installationUrl) {
+      return;
+    }
+
+    try {
+      const result = await SsoUtils.loginWithSSO(installationUrl);
+
+      if (result.type === 'success' && result.url) {
+        const ssoParams = SsoUtils.parseCallbackUrl(result.url);
+        await SsoUtils.handleSsoCallback(ssoParams, dispatch);
+      }
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error) {
+      // SSO login error handled silently
+    }
+  };
+
   return (
     <SafeAreaView edges={['top']} style={tailwind.style('flex-1 bg-white')}>
       <StatusBar
@@ -106,9 +153,11 @@ const LoginScreen = () => {
         barStyle={'dark-content'}
       />
       <View style={tailwind.style('flex-1 bg-white')}>
-        <Animated.ScrollView
+        <KeyboardAwareScrollView
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={tailwind.style('px-6 pt-24')}>
+          keyboardShouldPersistTaps="handled"
+          bottomOffset={24}
+          contentContainerStyle={tailwind.style('px-6 pt-24 pb-8')}>
           <Image
             // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-require-imports
             source={require('@/assets/images/logo.png')}
@@ -127,6 +176,27 @@ const LoginScreen = () => {
             </Animated.Text>
           </View>
 
+          {showSsoLogin && (
+            <View>
+              <AuthButton
+                text={i18n.t('LOGIN.LOGIN_VIA_SSO')}
+                icon={<LockIcon />}
+                handlePress={handleSsoLogin}
+                disabled={isLoggingIn}
+                variant="outline"
+                style={tailwind.style('mt-8')}
+              />
+
+              <View style={tailwind.style('flex-row items-center my-6')}>
+                <View style={tailwind.style('flex-1 h-px bg-gray-300')} />
+                <Animated.Text style={tailwind.style('px-4 text-sm text-gray-600')}>
+                  OR
+                </Animated.Text>
+                <View style={tailwind.style('flex-1 h-px bg-gray-300')} />
+              </View>
+            </View>
+          )}
+
           <Controller
             control={control}
             rules={{
@@ -137,7 +207,7 @@ const LoginScreen = () => {
               },
             }}
             render={({ field: { onChange, onBlur, value } }) => (
-              <View style={tailwind.style('pt-8 gap-2')}>
+              <View style={tailwind.style('pt-2 gap-2')}>
                 <Animated.Text style={tailwind.style('font-inter-420-20 text-gray-950')}>
                   {i18n.t('LOGIN.EMAIL')}
                 </Animated.Text>
@@ -220,15 +290,16 @@ const LoginScreen = () => {
           <Button
             text={isLoggingIn ? i18n.t('LOGIN.LOGIN_LOADING') : i18n.t('LOGIN.LOGIN')}
             handlePress={handleSubmit(onSubmit)}
+            disabled={
+              isLoggingIn ||
+              isVersionCheckLoading ||
+              !!(versionCheckResult && !versionCheckResult.isVersionSupported)
+            }
           />
 
           <Pressable
             style={tailwind.style('flex-row justify-center items-center mt-6')}
-            onPress={openConfigInstallationURL}>
-            <Animated.Text style={tailwind.style('text-sm text-gray-900')}>
-              {i18n.t('LOGIN.CHANGE_URL')}
-            </Animated.Text>
-          </Pressable>
+            onPress={openConfigInstallationURL}></Pressable>
           <Pressable
             style={tailwind.style('flex-row justify-center items-center mt-4')}
             onPress={() => languagesModalSheetRef.current?.present()}>
@@ -236,7 +307,7 @@ const LoginScreen = () => {
               {i18n.t('LOGIN.CHANGE_LANGUAGE')}
             </Animated.Text>
           </Pressable>
-        </Animated.ScrollView>
+        </KeyboardAwareScrollView>
       </View>
       <BottomSheetModal
         ref={languagesModalSheetRef}
@@ -253,6 +324,15 @@ const LoginScreen = () => {
           <LanguageList onChangeLanguage={onChangeLanguage} currentLanguage={activeLocale} />
         </BottomSheetScrollView>
       </BottomSheetModal>
+
+      {/* Version Check Modal */}
+      {versionCheckResult && !versionCheckResult.isVersionSupported && (
+        <VersionBlockModal
+          visible={true}
+          minVersion={versionCheckResult.minVersion}
+          currentVersion={versionCheckResult.currentVersion}
+        />
+      )}
     </SafeAreaView>
   );
 };

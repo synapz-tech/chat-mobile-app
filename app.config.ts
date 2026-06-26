@@ -1,14 +1,18 @@
-import { ExpoConfig, ConfigContext } from 'expo/config';
+import { ConfigContext, ExpoConfig } from 'expo/config';
 
 export default ({ config }: ConfigContext): ExpoConfig => {
   return {
-    name: 'Chatwoot',
-    slug: process.env.EXPO_PUBLIC_APP_SLUG || 'chatwoot-mobile',
-    version: '4.1.2',
+    name: 'Synapz Chat',
+    slug: process.env.EXPO_PUBLIC_APP_SLUG || 'synapz-chat',
+    version: '4.7.0',
     orientation: 'portrait',
-    icon: './assets/icon.png',
+    icon: './assets/icon-new.png',
     userInterfaceStyle: 'light',
     newArchEnabled: false,
+    notification: {
+      icon: './assets/notification-image.png',
+    },
+    scheme: 'chatwootapp',
     splash: {
       image: './assets/splash.png',
       resizeMode: 'contain',
@@ -17,13 +21,14 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     },
     ios: {
       supportsTablet: true,
-      bundleIdentifier: 'com.chatwoot.app',
+      bundleIdentifier: 'com.synapz.chat',
       infoPlist: {
         NSCameraUsageDescription:
-          'This app requires access to the camera to upload images and videos.',
+          'O aplicativo usa a câmera para tirar fotos e gravar vídeos que podem ser enviados nas conversas de atendimento com o suporte.',
         NSPhotoLibraryUsageDescription:
-          'This app requires access to the photo library to upload images.',
-        NSMicrophoneUsageDescription: 'This app requires access to the microphone to record audio.',
+          'O aplicativo acessa sua galeria para permitir o envio de imagens existentes nas conversas com o suporte.',
+        NSMicrophoneUsageDescription:
+          'O aplicativo utiliza o microfone para gravar áudios e enviá-los nas conversas de atendimento.',
         NSAppleMusicUsageDescription:
           'This app does not use Apple Music, but a system API may require this permission.',
         UIBackgroundModes: ['fetch', 'remote-notification'],
@@ -32,11 +37,14 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       // Please use the relative path to the google-services.json file
       googleServicesFile: process.env.EXPO_PUBLIC_IOS_GOOGLE_SERVICES_FILE,
       entitlements: { 'aps-environment': 'production' },
-      associatedDomains: ['applinks:app.chatwoot.com'],
+      associatedDomains: ['applinks:chat.synapz.tech'],
     },
     android: {
-      adaptiveIcon: { foregroundImage: './assets/adaptive-icon.png', backgroundColor: '#ffffff' },
-      package: 'com.chatwoot.app',
+      adaptiveIcon: {
+        foregroundImage: './assets/adaptive-icon-new.png',
+        backgroundColor: '#ffffff',
+      },
+      package: 'com.synapz.chat',
       permissions: [
         'android.permission.CAMERA',
         'android.permission.READ_EXTERNAL_STORAGE',
@@ -53,9 +61,18 @@ export default ({ config }: ConfigContext): ExpoConfig => {
           data: [
             {
               scheme: 'https',
-              host: 'app.chatwoot.com',
+              host: 'chat.synapz.tech',
               pathPrefix: '/app/accounts/',
               pathPattern: '/*/conversations/*',
+            },
+          ],
+          category: ['BROWSABLE', 'DEFAULT'],
+        },
+        {
+          action: 'VIEW',
+          data: [
+            {
+              scheme: 'chatwootapp',
             },
           ],
           category: ['BROWSABLE', 'DEFAULT'],
@@ -64,22 +81,22 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     },
     extra: {
       eas: {
-        projectId: process.env.EXPO_PUBLIC_PROJECT_ID,
+        projectId: process.env.EXPO_PUBLIC_PROJECT_ID || '8333f67c-4e5c-473b-91d3-31ffc09234a7',
         storybookEnabled: process.env.EXPO_STORYBOOK_ENABLED,
       },
     },
-    owner: 'chatwoot',
+    // owner: 'synapz-chat', // Comentado temporariamente para build local
     plugins: [
       'expo-font',
       ['react-native-permissions', { iosPermissions: ['Camera', 'PhotoLibrary', 'MediaLibrary'] }],
-      [
-        '@sentry/react-native/expo',
-        {
-          url: 'https://sentry.io/',
-          project: process.env.EXPO_PUBLIC_SENTRY_PROJECT_NAME,
-          organization: process.env.EXPO_PUBLIC_SENTRY_ORG_NAME,
-        },
-      ],
+      // [
+      //   '@sentry/react-native/expo',
+      //   {
+      //     url: 'https://sentry.io/',
+      //     project: process.env.EXPO_PUBLIC_SENTRY_PROJECT_NAME,
+      //     organization: process.env.EXPO_PUBLIC_SENTRY_ORG_NAME,
+      //   },
+      // ], // Comentado temporariamente para build local
       '@react-native-firebase/app',
       '@react-native-firebase/messaging',
       [

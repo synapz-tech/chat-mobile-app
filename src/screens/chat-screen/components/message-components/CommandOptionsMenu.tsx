@@ -1,6 +1,12 @@
 import React from 'react';
 import { Alert, Linking, Platform, Pressable, Text } from 'react-native';
-import DocumentPicker, { DocumentPickerResponse } from 'react-native-document-picker';
+import {
+  pick,
+  types as documentPickerTypes,
+  errorCodes as documentPickerErrorCodes,
+  isErrorWithCode,
+  type DocumentPickerResponse,
+} from '@react-native-documents/picker';
 import { Asset, launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { PERMISSIONS, request, RESULTS } from 'react-native-permissions';
 import Animated, { SlideInDown, SlideOutDown } from 'react-native-reanimated';
@@ -16,95 +22,39 @@ import { MAXIMUM_FILE_UPLOAD_SIZE } from '@/constants';
 import i18n from '@/i18n';
 import { showToast } from '@/utils/toastUtils';
 import { findFileSize } from '@/utils/fileUtils';
-import { getApiLevel } from 'react-native-device-info';
 
 export const handleOpenPhotosLibrary = async dispatch => {
-  if (Platform.OS === 'ios') {
-    request(
-      Platform.OS === 'ios'
-        ? PERMISSIONS.IOS.PHOTO_LIBRARY
-        : PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE,
-    ).then(async result => {
-      if (RESULTS.BLOCKED === result) {
-        Alert.alert(
-          'Permission Denied',
-          'The permission to access the photo library has been denied and cannot be requested again. Please enable it in your device settings if you wish to access photos from your library.',
-          [
-            {
-              text: 'Cancel',
-              style: 'cancel',
-            },
-            {
-              text: 'Open Settings',
-              onPress: () => {
-                // Open app settings
-                Linking.openSettings();
-              },
-            },
-          ],
-          { cancelable: false },
-        );
-      }
-      if (result === RESULTS.GRANTED || result === RESULTS.LIMITED) {
-        const pickedAssets = await launchImageLibrary({
-          quality: 1,
-          selectionLimit: 4,
-          mediaType: 'mixed',
-          presentationStyle: 'formSheet',
-        });
-        if (pickedAssets.didCancel) {
-        } else if (pickedAssets.errorCode) {
-        } else {
-          if (pickedAssets.assets && pickedAssets.assets?.length > 0) {
-            validateFileAndSetAttachments(dispatch, pickedAssets.assets[0]);
-          }
-        }
-      }
-    });
+  const pickedAssets = await launchImageLibrary({
+    quality: 1,
+    selectionLimit: 4,
+    mediaType: 'mixed',
+    presentationStyle: 'formSheet',
+  });
+  if (pickedAssets.didCancel) {
+  } else if (pickedAssets.errorCode) {
+    Alert.alert(
+      'Permission Denied',
+      pickedAssets.errorMessage ||
+        'The permission to access the photo library has been denied and cannot be requested again. Please enable it in your device settings if you wish to access photos from your library.',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Open Settings',
+          onPress: () => {
+            // Open app settings
+            Linking.openSettings();
+          },
+        },
+      ],
+      { cancelable: false },
+    );
   } else {
-    const apiLevel = await getApiLevel();
-    const permission =
-      apiLevel >= 33
-        ? PERMISSIONS.ANDROID.READ_MEDIA_IMAGES
-        : PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE;
-
-    request(permission).then(async result => {
-      if (RESULTS.BLOCKED === result) {
-        Alert.alert(
-          'Permission Denied',
-          'The permission to access the photo library has been denied and cannot be requested again. Please enable it in your device settings if you wish to access photos from your library.',
-          [
-            {
-              text: 'Cancel',
-              style: 'cancel',
-            },
-            {
-              text: 'Open Settings',
-              onPress: () => {
-                // Open app settings
-                Linking.openSettings();
-              },
-            },
-          ],
-          { cancelable: false },
-        );
-      }
-      if (result === RESULTS.GRANTED) {
-        const pickedAssets = await launchImageLibrary({
-          quality: 1,
-          selectionLimit: 4,
-          mediaType: 'mixed',
-          presentationStyle: 'formSheet',
-        });
-        if (pickedAssets.didCancel) {
-        } else if (pickedAssets.errorCode) {
-        } else {
-          if (pickedAssets.assets && pickedAssets.assets?.length > 0) {
-            validateFileAndSetAttachments(dispatch, pickedAssets.assets[0]);
-          }
-        }
-      }
-    });
+    if (pickedAssets.assets && pickedAssets.assets?.length > 0) {
+      validateFileAndSetAttachments(dispatch, pickedAssets.assets[0]);
+    }
   }
 };
 
@@ -169,29 +119,29 @@ const mapObject = (originalObject: DocumentPickerResponse): Asset[] => {
 
 const handleAttachFile = async dispatch => {
   try {
-    const result = await DocumentPicker.pick({
+    const result = await pick({
       type: [
-        DocumentPicker.types.allFiles,
-        DocumentPicker.types.images,
-        DocumentPicker.types.plainText,
-        DocumentPicker.types.audio,
-        DocumentPicker.types.pdf,
-        DocumentPicker.types.zip,
-        DocumentPicker.types.csv,
-        DocumentPicker.types.doc,
-        DocumentPicker.types.docx,
-        DocumentPicker.types.ppt,
-        DocumentPicker.types.pptx,
-        DocumentPicker.types.xls,
-        DocumentPicker.types.xlsx,
-      ], // You can specify the file types you want to allow
+        documentPickerTypes.allFiles,
+        documentPickerTypes.images,
+        documentPickerTypes.plainText,
+        documentPickerTypes.audio,
+        documentPickerTypes.pdf,
+        documentPickerTypes.zip,
+        documentPickerTypes.csv,
+        documentPickerTypes.doc,
+        documentPickerTypes.docx,
+        documentPickerTypes.ppt,
+        documentPickerTypes.pptx,
+        documentPickerTypes.xls,
+        documentPickerTypes.xlsx,
+      ],
       presentationStyle: 'formSheet',
     });
     // TODO: Support multiple files
     const file = mapObject(result[0])[0];
     validateFileAndSetAttachments(dispatch, file);
   } catch (err) {
-    if (DocumentPicker.isCancel(err)) {
+    if (isErrorWithCode(err) && err.code === documentPickerErrorCodes.OPERATION_CANCELED) {
       // User cancelled the picker
     } else {
       throw err;

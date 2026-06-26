@@ -1,17 +1,17 @@
+import { Button, Icon } from '@/components-next';
+import { URL_WITHOUT_HTTP_REGEX } from '@/constants';
+import { useAppDispatch, useAppSelector } from '@/hooks';
+import i18n from '@/i18n';
+import { settingsActions } from '@/store/settings/settingsActions';
+import { selectBaseUrl } from '@/store/settings/settingsSelectors';
+import { resetSettings } from '@/store/settings/settingsSlice';
+import { LinkIcon } from '@/svg-icons';
+import { tailwind } from '@/theme';
+import * as Application from 'expo-application';
 import React, { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Animated, StatusBar, TextInput, View } from 'react-native';
-import * as Application from 'expo-application';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Button, Icon } from '@/components-next';
-import { URL_WITHOUT_HTTP_REGEX } from '@/constants';
-import { LinkIcon } from '@/svg-icons';
-import { tailwind } from '@/theme';
-import i18n from '@/i18n';
-import { useAppSelector, useAppDispatch } from '@/hooks';
-import { selectBaseUrl } from '@/store/settings/settingsSelectors';
-import { resetSettings } from '@/store/settings/settingsSlice';
-import { settingsActions } from '@/store/settings/settingsActions';
 
 type FormData = {
   url: string;
@@ -30,7 +30,7 @@ const ConfigURLScreen = () => {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      url: baseUrl ? baseUrl : appName === 'Chatwoot' ? 'app.chatwoot.com' : '',
+      url: baseUrl ? baseUrl : appName === 'Synapz' ? 'chat.synapz.tech' : '',
     },
   });
 

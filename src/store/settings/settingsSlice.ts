@@ -1,8 +1,8 @@
+import { Theme } from '@/types/common/Theme';
+import * as RootNavigation from '@/utils/navigationUtils';
 import { createSlice } from '@reduxjs/toolkit';
 import { settingsActions } from './settingsActions';
-import * as RootNavigation from '@/utils/navigationUtils';
 import { NotificationSettings } from './settingsTypes';
-import { Theme } from '@/types/common/Theme';
 
 interface SettingsState {
   baseUrl: string;
@@ -20,14 +20,14 @@ interface SettingsState {
   pushToken: string;
 }
 const initialState: SettingsState = {
-  baseUrl: 'app.chatwoot.com',
-  installationUrl: 'https://app.chatwoot.com/',
+  baseUrl: 'chat.synapz.tech',
+  installationUrl: 'https://chat.synapz.tech',
   uiFlags: {
     isSettingUrl: false,
     isUpdating: false,
     isLocaleSet: false,
   },
-  localeValue: 'en',
+  localeValue: 'pt_BR',
   notificationSettings: {
     account_id: 0,
     all_email_flags: [],
@@ -37,7 +37,7 @@ const initialState: SettingsState = {
     selected_push_flags: [],
     user_id: 0,
   },
-  webSocketUrl: 'wss://app.chatwoot.com/cable',
+  webSocketUrl: 'wss://chat.synapz.tech/cable',
   theme: 'system',
   version: '',
   pushToken: '',

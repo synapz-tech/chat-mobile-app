@@ -1,24 +1,25 @@
-import React, { useEffect, useMemo, useState, useCallback } from 'react';
+import * as Sentry from '@sentry/react-native';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Platform, Pressable, View } from 'react-native';
 import { PlayBackType } from 'react-native-audio-recorder-player';
 import Animated, { FadeIn, FadeOut, useSharedValue } from 'react-native-reanimated';
 import Svg, { Path, Rect } from 'react-native-svg';
-import * as Sentry from '@sentry/react-native';
 
 import {
   selectCurrentPlayingAudioSrc,
   setCurrentPlayingAudioSrc,
 } from '@/store/conversation/audioPlayerSlice';
 
-import { tailwind } from '@/theme';
-import { IconProps } from '@/types';
 import { Icon, Slider } from '@/components-next/common';
 import { Spinner } from '@/components-next/spinner';
-import { pausePlayer, resumePlayer, seekTo, startPlayer, stopPlayer } from '../audio-recorder';
 import { MESSAGE_VARIANTS } from '@/constants';
-import { useDispatch } from 'react-redux';
 import { useAppSelector } from '@/hooks';
+import { tailwind } from '@/theme';
+import { IconProps } from '@/types';
+// eslint-disable-next-line import/no-unresolved
 import { convertOggToWav } from '@/utils/audioConverter';
+import { useDispatch } from 'react-redux';
+import { pausePlayer, resumePlayer, seekTo, startPlayer, stopPlayer } from '../audio-recorder';
 
 // eslint-disable-next-line react/display-name
 const PlayIcon = React.memo(({ fill, fillOpacity }: IconProps) => {
