@@ -2,28 +2,28 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import * as Sentry from '@sentry/react-native';
 
 import messaging from '@react-native-firebase/messaging';
-import { Platform, PermissionsAndroid } from 'react-native';
+import { PermissionsAndroid, Platform } from 'react-native';
 import {
-  getSystemName,
-  getManufacturer,
-  getModel,
   getApiLevel,
   getBrand,
   getBuildNumber,
+  getManufacturer,
+  getModel,
+  getSystemName,
   getUniqueId,
 } from 'react-native-device-info';
 
+import { URL_TYPE } from '@/constants/url';
+import I18n from '@/i18n';
+import { showToast } from '@/utils/toastUtils';
 import { SettingsService } from './settingsService';
 import type {
+  InstallationUrls,
   NotificationSettings,
   NotificationSettingsPayload,
-  InstallationUrls,
   PushPayload,
 } from './settingsTypes';
-import I18n from '@/i18n';
-import { URL_TYPE } from '@/constants/url';
 import { checkValidUrl, extractDomain, handleApiError } from './settingsUtils';
-import { showToast } from '@/utils/toastUtils';
 
 const createSettingsThunk = <TResponse, TPayload>(
   type: string,

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "18515237774",
+    "project_id": "synapz-chat",
+    "storage_bucket": "synapz-chat.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:18515237774:android:d96e765cbeb67b682fe2df",
+        "android_client_info": {
+          "package_name": "com.synapz.chat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "18515237774-7t468ctpm0cma36h32roj0semavu73tj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDADEY6p5kwE0Cvo1I6Vv_VZsw5G2Me0cs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "18515237774-7t468ctpm0cma36h32roj0semavu73tj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

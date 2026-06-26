@@ -1,5 +1,5 @@
 module.exports = {
-  preset: 'react-native',
+  preset: 'jest-expo',
   moduleDirectories: ['node_modules', 'src'],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',

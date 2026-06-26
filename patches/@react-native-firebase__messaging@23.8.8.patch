@@ -1,0 +1,20 @@
+diff --git a/ios/RNFBMessaging/RNFBMessaging+NSNotificationCenter.m b/ios/RNFBMessaging/RNFBMessaging+NSNotificationCenter.m
+index 1867f14a40f05d9dbdd04330a303a28e63e7f27c..40c3dfead13e38690887ac608a27b27db6b19dd0 100644
+--- a/ios/RNFBMessaging/RNFBMessaging+NSNotificationCenter.m
++++ b/ios/RNFBMessaging/RNFBMessaging+NSNotificationCenter.m
+@@ -78,6 +78,7 @@ - (void)application_onDidFinishLaunchingNotification:(nonnull NSNotification *)n
+ 
+   RCTRootView *rctRootView;
+   if ([UIApplication sharedApplication].delegate != nil &&
++      [[UIApplication sharedApplication].delegate respondsToSelector:@selector(window)] &&
+       [UIApplication sharedApplication].delegate.window != nil &&
+       [UIApplication sharedApplication].delegate.window.rootViewController != nil &&
+       [UIApplication sharedApplication].delegate.window.rootViewController.view != nil &&
+@@ -150,6 +151,7 @@ - (void)application_onDidFinishLaunchingNotification:(nonnull NSNotification *)n
+ - (void)application_onDidEnterForeground {
+   isHeadless = NO;
+   if ([UIApplication sharedApplication].delegate != nil &&
++      [[UIApplication sharedApplication].delegate respondsToSelector:@selector(window)] &&
+       [UIApplication sharedApplication].delegate.window != nil &&
+       [UIApplication sharedApplication].delegate.window.rootViewController != nil &&
+       [UIApplication sharedApplication].delegate.window.rootViewController.view != nil &&

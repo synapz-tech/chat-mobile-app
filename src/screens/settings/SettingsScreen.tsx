@@ -1,40 +1,42 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { StatusBar, Text, Platform, Pressable } from 'react-native';
+import { Platform, Pressable, StatusBar, Text } from 'react-native';
 import Animated from 'react-native-reanimated';
 // import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { StackActions, useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { StackActions, useNavigation } from '@react-navigation/native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { clearAllContacts } from '@/store/contact/contactSlice';
+import { clearAllConversations } from '@/store/conversation/conversationSlice';
+import { resetNotifications } from '@/store/notification/notificationSlice';
+import { Account, AvailabilityStatus } from '@/types';
+import ChatWootWidget from '@chatwoot/react-native-widget';
 import {
   BottomSheetModal,
   BottomSheetScrollView,
   useBottomSheetSpringConfigs,
 } from '@gorhom/bottom-sheet';
-import DeviceInfo from 'react-native-device-info';
-import * as WebBrowser from 'expo-web-browser';
-import ChatWootWidget from '@chatwoot/react-native-widget';
-import { useSelector } from 'react-redux';
 import * as Application from 'expo-application';
-import { Account, AvailabilityStatus } from '@/types';
-import { clearAllConversations } from '@/store/conversation/conversationSlice';
-import { resetNotifications } from '@/store/notification/notificationSlice';
-import { clearAllContacts } from '@/store/contact/contactSlice';
+import * as WebBrowser from 'expo-web-browser';
+import DeviceInfo from 'react-native-device-info';
+import { useSelector } from 'react-redux';
 
-import i18n from 'i18n';
+import { clearSearchResults } from '@/store/search/searchSlice';
+import { RecentSearches } from '@/screens/search/utils/recentSearches';
 import { HELP_URL } from '@/constants/url';
 import { tailwind } from '@/theme';
+import i18n from 'i18n';
 
 import {
+  AvailabilityStatusList,
   BottomSheetBackdrop,
   BottomSheetHeader,
   BottomSheetWrapper,
   Button,
   LanguageList,
-  AvailabilityStatusList,
   NotificationPreferences,
-  SwitchAccount,
   SettingsList,
+  SwitchAccount,
 } from '@/components-next';
 import { UserAvatar } from './components/UserAvatar';
 
@@ -43,29 +45,29 @@ import { useRefsContext } from '@/context';
 import { ChatwootIcon, NotificationIcon, SwitchIcon, TranslateIcon } from '@/svg-icons';
 import { GenericListType } from '@/types';
 
+import { authActions } from '@/store/auth/authActions';
+import {
+  selectAccounts,
+  selectCurrentUserAvailability,
+  selectUser,
+} from '@/store/auth/authSelectors';
+import { logout, setAccount } from '@/store/auth/authSlice';
+import { settingsActions } from '@/store/settings/settingsActions';
+import {
+  selectIsChatwootCloud,
+  selectLocale,
+  selectPushToken,
+} from '@/store/settings/settingsSelectors';
+import { setLocale } from '@/store/settings/settingsSlice';
 import { useHaptic } from '@/utils';
 import { SettingsHeader } from './SettingsHeader';
 import { DebugActions } from './components/DebugActions';
-import {
-  selectCurrentUserAvailability,
-  selectUser,
-  selectAccounts,
-} from '@/store/auth/authSelectors';
-import { logout, setAccount } from '@/store/auth/authSlice';
-import { authActions } from '@/store/auth/authActions';
-import {
-  selectLocale,
-  selectIsChatwootCloud,
-  selectPushToken,
-} from '@/store/settings/settingsSelectors';
-import { settingsActions } from '@/store/settings/settingsActions';
-import { setLocale } from '@/store/settings/settingsSlice';
 
-import AnalyticsHelper from '@/utils/analyticsUtils';
 import { PROFILE_EVENTS } from '@/constants/analyticsEvents';
-import { getUserPermissions } from '@/utils/permissionUtils';
 import { CONVERSATION_PERMISSIONS } from '@/constants/permissions';
 import { useAppDispatch, useAppSelector } from '@/hooks';
+import AnalyticsHelper from '@/utils/analyticsUtils';
+import { getUserPermissions } from '@/utils/permissionUtils';
 
 const appName = Application.applicationName;
 const appVersion = Application.nativeApplicationVersion;
@@ -169,12 +171,17 @@ const SettingsScreen = () => {
     dispatch(setLocale(locale));
   };
 
-  const changeAccount = (accountId: number) => {
+  const changeAccount = async (accountId: number) => {
+    try {
+      await dispatch(authActions.setActiveAccount({ profile: { account_id: accountId } })).unwrap();
+    } catch {
+      return;
+    }
     dispatch(clearAllContacts());
     dispatch(clearAllConversations());
     dispatch(resetNotifications());
+    dispatch(clearSearchResults());
     dispatch(setAccount(accountId));
-    dispatch(authActions.setActiveAccount({ profile: { account_id: accountId } }));
     navigation.dispatch(StackActions.replace('Tab'));
   };
 
@@ -206,6 +213,7 @@ const SettingsScreen = () => {
 
   const onClickLogout = useCallback(async () => {
     await AsyncStorage.removeItem('cwCookie');
+    await RecentSearches.clearAll();
     await dispatch(settingsActions.removeDevice({ pushToken }));
     dispatch(logout());
   }, [dispatch, pushToken]);
@@ -313,9 +321,9 @@ const SettingsScreen = () => {
         <Animated.View style={tailwind.style('pt-6')}>
           <SettingsList sectionTitle={i18n.t('SETTINGS.PREFERENCES')} list={preferencesList} />
         </Animated.View>
-        <Animated.View style={tailwind.style('pt-6')}>
+        {/* <Animated.View style={tailwind.style('pt-6')}>
           <SettingsList sectionTitle={i18n.t('SETTINGS.SUPPORT')} list={supportList} />
-        </Animated.View>
+        </Animated.View> */}
         <Animated.View style={tailwind.style('pt-6 mx-4')}>
           <Button
             variant="secondary"

@@ -533,5 +533,10 @@
     "ERROR_UPDATE": "Não foi possível atualizar o caso",
     "ERROR_NO_SESSION": "Sessão expirada — faça login novamente",
     "RETRY": "Tentar novamente"
+  },
+  "VERSION_CHECK": {
+    "TITLE": "Atualização Necessária",
+    "MESSAGE": "Por favor, atualize para a versão {{version}} ou superior para continuar usando o aplicativo.",
+    "OK": "OK"
   }
 }

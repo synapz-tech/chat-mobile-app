@@ -2,6 +2,7 @@ nodeLinker: hoisted
 patchedDependencies:
   ffmpeg-kit-react-native@6.0.2: patches/ffmpeg-kit-react-native.patch
   react-native-ios-utilities@5.2.0: patches/react-native-ios-utilities@5.2.0.patch
+  '@react-native-firebase/messaging@23.8.8': patches/@react-native-firebase__messaging@23.8.8.patch
 overrides:
   react-native-screens: 4.18.0
 allowBuilds:

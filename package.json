@@ -34,7 +34,6 @@
     "adb:connect": "adb reverse tcp:9090 tcp:9090"
   },
   "dependencies": {
-    "@alantoa/lightbox": "^0.3.1",
     "@chatwoot/markdown-to-txt": "^2.0.4",
     "@chatwoot/react-native-widget": "^0.0.21",
     "@chatwoot/utils": "^0.0.33",
@@ -47,8 +46,10 @@
     "@react-native-community/blur": "^4.4.1",
     "@react-native-community/netinfo": "^11.4.1",
     "@react-native-documents/picker": "^12.0.1",
+    "@react-native-firebase/analytics": "^23.8.8",
     "@react-native-firebase/app": "^23.8.8",
     "@react-native-firebase/messaging": "^23.8.8",
+    "@react-native-firebase/remote-config": "^23.8.8",
     "@react-native-menu/menu": "^1.2.0",
     "@react-navigation/bottom-tabs": "^6.6.1",
     "@react-navigation/native": "^6.1.18",
@@ -117,8 +118,8 @@
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
-    "@react-native-community/datetimepicker": "^8.2.0",
-    "@react-native-community/slider": "^4.5.5",
+    "@react-native-community/datetimepicker": "8.4.1",
+    "@react-native-community/slider": "4.5.6",
     "@storybook/addon-ondevice-actions": "^8.6.2",
     "@storybook/addon-ondevice-controls": "^8.6.2",
     "@storybook/react-native": "^8.6.2",
@@ -141,16 +142,19 @@
   "expo": {
     "install": {
       "exclude": [
-        "@kesha-antonov/react-native-action-cable"
+        "@kesha-antonov/react-native-action-cable",
+        "react-native-gesture-handler",
+        "react-native-reanimated",
+        "eslint-config-expo"
       ]
     },
     "doctor": {
       "reactNativeDirectoryCheck": {
         "enabled": true,
         "exclude": [
+          "@react-native-documents/picker",
           "@kesha-antonov/react-native-action-cable",
           "react-native-audio-recorder-player",
-          "react-native-file-viewer",
           "react-native-file-viewer",
           "react-native-fs",
           "react-native-snackbar",
@@ -172,7 +176,11 @@
           "use-deep-compare-effect",
           "diff",
           "string.prototype.matchall",
-          "snakecase-keys"
+          "snakecase-keys",
+          "react-native-image-modal",
+          "@notifee/react-native",
+          "expo-av",
+          "react-native-markdown-display"
         ],
         "listUnknownPackages": true
       }
@@ -181,7 +189,8 @@
   "pnpm": {
     "patchedDependencies": {
       "ffmpeg-kit-react-native@6.0.2": "patches/ffmpeg-kit-react-native.patch",
-      "react-native-ios-utilities@5.2.0": "patches/react-native-ios-utilities@5.2.0.patch"
+      "react-native-ios-utilities@5.2.0": "patches/react-native-ios-utilities@5.2.0.patch",
+      "@react-native-firebase/messaging@23.8.8": "patches/@react-native-firebase__messaging@23.8.8.patch"
     },
     "overrides": {
       "form-data": "^4.0.4",
