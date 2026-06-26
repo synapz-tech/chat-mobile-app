@@ -20,6 +20,7 @@ export default function BackofficeScreen(): JSX.Element {
       icon: <PhoneIcon />,
       subtitle: i18n.t('BACKOFFICE.NETWORK_DIAGNOSTICS_DESC'),
       subtitleType: 'light',
+      subtitlePlacement: 'below',
       // @ts-expect-error navigation is typed loosely across stacks in this app
       onPressListItem: () => navigation.navigate('NetworkDiagnosticsScreen'),
     },

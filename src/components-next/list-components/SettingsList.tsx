@@ -21,6 +21,8 @@ type ListItemProps = {
 const ListItem = (props: ListItemProps) => {
   const { listItem, index, isLastItem } = props;
 
+  const isSubtitleBelow = listItem.subtitlePlacement === 'below' && !!listItem.subtitle;
+
   return (
     <Pressable
       onPress={() => listItem.onPressListItem && listItem.onPressListItem()}
@@ -40,26 +42,38 @@ const ListItem = (props: ListItemProps) => {
         ) : null}
         <Animated.View
           style={tailwind.style(
-            'flex-1 flex-row items-center justify-between py-[11px]',
+            'flex-1 flex-row items-center justify-between py-[11px] pr-3',
             listItem.icon ? 'ml-3' : '',
             !isLastItem ? 'border-b-[1px] border-b-blackA-A3' : '',
           )}>
-          <Animated.View>
+          <Animated.View style={tailwind.style('flex-1')}>
             <Animated.Text
               style={tailwind.style(
                 'text-base font-inter-420-20 leading-[22px] tracking-[0.16px] text-gray-950',
               )}>
               {listItem.title}
             </Animated.Text>
+            {isSubtitleBelow ? (
+              <Animated.Text
+                style={tailwind.style(
+                  'text-sm font-inter-normal-20 leading-[18px] tracking-[0.16px] mt-[2px]',
+                  listItem.subtitleType === 'light' ? 'text-gray-700' : 'text-gray-900',
+                )}>
+                {listItem.subtitle}
+              </Animated.Text>
+            ) : null}
           </Animated.View>
-          <Animated.View style={tailwind.style('flex flex-row items-center pr-3')}>
-            <Animated.Text
-              style={tailwind.style(
-                'text-base font-inter-normal-20 leading-[22px] tracking-[0.16px]',
-                listItem.subtitleType === 'light' ? 'text-gray-900' : 'text-gray-950',
-              )}>
-              {listItem.subtitle}
-            </Animated.Text>
+          <Animated.View style={tailwind.style('flex flex-row items-center pl-3')}>
+            {!isSubtitleBelow && listItem.subtitle ? (
+              <Animated.Text
+                numberOfLines={1}
+                style={tailwind.style(
+                  'text-base font-inter-normal-20 leading-[22px] tracking-[0.16px]',
+                  listItem.subtitleType === 'light' ? 'text-gray-900' : 'text-gray-950',
+                )}>
+                {listItem.subtitle}
+              </Animated.Text>
+            ) : null}
             {listItem.hasChevron ? <Icon icon={<CaretRight />} size={20} /> : null}
           </Animated.View>
         </Animated.View>

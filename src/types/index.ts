@@ -20,6 +20,12 @@ export interface GenericListType {
   icon?: React.ReactNode;
   subtitle?: string;
   subtitleType?: 'dark' | 'light';
+  /**
+   * Where to render the subtitle relative to the title.
+   * - `inline` (default): subtitle is a short trailing value shown to the right of the title.
+   * - `below`: subtitle is a description rendered under the title (wraps to multiple lines).
+   */
+  subtitlePlacement?: 'inline' | 'below';
   hasChevron?: boolean;
   disabled?: boolean;
   link?: string;
