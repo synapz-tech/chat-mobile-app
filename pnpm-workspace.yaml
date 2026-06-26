@@ -1,3 +1,4 @@
+packages: []
 nodeLinker: hoisted
 patchedDependencies:
   ffmpeg-kit-react-native@6.0.2: patches/ffmpeg-kit-react-native.patch
