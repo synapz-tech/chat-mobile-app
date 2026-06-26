@@ -50,7 +50,7 @@ class APIService {
         const headers = this.getHeaders();
         const store = getStore();
         const state = store.getState();
-        config.baseURL = state.settings?.installationUrl;
+        config.baseURL = state.settings?.installationUrl?.replace(/\/+$/, '');
         const accountId = state.auth.user?.account_id;
         if (accountId && config.url && !nonAccountRoutes.includes(config.url)) {
           config.url = `api/v1/accounts/${accountId}/${config.url}`;

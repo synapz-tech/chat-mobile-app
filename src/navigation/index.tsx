@@ -1,4 +1,10 @@
-import messaging from '@react-native-firebase/messaging';
+import { getApp } from '@react-native-firebase/app';
+import {
+  getInitialNotification,
+  getMessaging,
+  onNotificationOpenedApp,
+  setBackgroundMessageHandler,
+} from '@react-native-firebase/messaging';
 import { getStateFromPath } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
@@ -27,7 +33,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { AppTabs } from './tabs/AppTabs';
 
-messaging().setBackgroundMessageHandler(async remoteMessage => {
+setBackgroundMessageHandler(getMessaging(getApp()), async remoteMessage => {
   console.log('Message handled in the background!', remoteMessage);
 });
 
@@ -120,7 +126,7 @@ export const AppNavigationContainer = () => {
       }
 
       // getInitialNotification: When the application is opened from a quit state.
-      const message = await messaging().getInitialNotification();
+      const message = await getInitialNotification(getMessaging(getApp()));
 
       if (message) {
         const notification = findNotificationFromFCM({ message });
@@ -152,7 +158,7 @@ export const AppNavigationContainer = () => {
       const subscription = Linking.addEventListener('url', onReceiveURL);
 
       //onNotificationOpenedApp: When the application is running, but in the background.
-      const unsubscribeNotification = messaging().onNotificationOpenedApp(message => {
+      const unsubscribeNotification = onNotificationOpenedApp(getMessaging(getApp()), message => {
         if (message) {
           const notification = findNotificationFromFCM({ message });
           const camelCaseNotification = transformNotification(notification);

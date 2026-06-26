@@ -18,15 +18,23 @@ async function postAction<T extends { success: boolean; error?: string }>(
   body: Record<string, unknown>,
   fallback: string,
 ): Promise<T> {
-  const response = await fetch(getNetworkDiagnosticsUrl(), {
+  const url = getNetworkDiagnosticsUrl();
+
+  const response = await fetch(url, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    // The n8n webhook validates the user against Chatwoot's `/profile` using
+    // the personal access token. Chatwoot accepts that token via the
+    // `api_access_token` header (Application API), NOT `Authorization: Bearer`
+    // — Bearer only works with the server-signed `chatwoot_bearer_token` JWT
+    // cookie that the web frontend has and the mobile app cannot generate.
+    headers: { 'Content-Type': 'application/json', api_access_token: token },
     body: JSON.stringify(body),
   });
 
+  const rawText = await response.text();
   let data: T | undefined;
   try {
-    data = (await response.json()) as T;
+    data = rawText ? (JSON.parse(rawText) as T) : undefined;
   } catch {
     data = undefined;
   }

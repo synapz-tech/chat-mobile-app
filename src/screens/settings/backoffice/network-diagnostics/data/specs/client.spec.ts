@@ -7,7 +7,12 @@ import {
 } from '../client';
 
 const okJson = (body: unknown) =>
-  Promise.resolve({ ok: true, status: 200, json: () => Promise.resolve(body) } as Response);
+  Promise.resolve({
+    ok: true,
+    status: 200,
+    json: () => Promise.resolve(body),
+    text: () => Promise.resolve(JSON.stringify(body)),
+  } as Response);
 
 describe('network diagnostics client', () => {
   beforeEach(() => {
@@ -17,7 +22,7 @@ describe('network diagnostics client', () => {
     jest.restoreAllMocks();
   });
 
-  it('posts a list body with bearer auth and omits undefined filters', async () => {
+  it('posts a list body with api_access_token auth and omits undefined filters', async () => {
     (global.fetch as jest.Mock).mockReturnValue(
       okJson({
         success: true,
@@ -39,7 +44,7 @@ describe('network diagnostics client', () => {
     });
     const [, init] = (global.fetch as jest.Mock).mock.calls[0];
     expect(init.method).toBe('POST');
-    expect(init.headers.Authorization).toBe('Bearer tok');
+    expect(init.headers.api_access_token).toBe('tok');
     const body = JSON.parse(init.body);
     expect(body).toMatchObject({ action: 'list', account_id: 4, page: 2, status: 'pendente' });
     expect('churn_risk' in body).toBe(false);
@@ -97,6 +102,7 @@ describe('network diagnostics client', () => {
         ok: false,
         status: 401,
         json: () => Promise.resolve({ error: 'invalid_token' }),
+        text: () => Promise.resolve(JSON.stringify({ error: 'invalid_token' })),
       } as Response),
     );
     await expect(fetchNetworkStats('tok', 4)).rejects.toThrow('invalid_token');

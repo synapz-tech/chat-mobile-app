@@ -165,7 +165,7 @@ export default function NetworkDiagnosticsScreen(): JSX.Element {
 
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
-      <StatusBar barStyle="light-content" backgroundColor={colors.bg} />
+      <StatusBar barStyle="dark-content" backgroundColor={colors.bg} />
       {/* Header */}
       <View style={styles.header}>
         <View style={styles.headerTop}>
@@ -209,7 +209,7 @@ export default function NetworkDiagnosticsScreen(): JSX.Element {
               value={search}
               onChangeText={setSearch}
               placeholder={i18n.t('NETWORK_DIAGNOSTICS.SEARCH_PLACEHOLDER')}
-              placeholderTextColor="#5C6680"
+              placeholderTextColor={colors.textMuted}
             />
             {!!search && (
               <Pressable onPress={() => setSearch('')}>
@@ -310,7 +310,7 @@ const styles = StyleSheet.create({
   header: {
     backgroundColor: colors.bg,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(255,255,255,0.06)',
+    borderBottomColor: colors.border,
   },
   headerTop: {
     flexDirection: 'row',
@@ -328,11 +328,11 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     backgroundColor: colors.surface,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.08)',
+    borderColor: colors.border,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  filterGlyph: { color: '#C7D0E0', fontSize: 18 },
+  filterGlyph: { color: colors.textDim, fontSize: 18 },
   filterDot: {
     position: 'absolute',
     top: -3,
@@ -349,29 +349,29 @@ const styles = StyleSheet.create({
     fontSize: 14.5,
     fontWeight: '600',
     paddingVertical: 9,
-    color: '#8A93A8',
+    color: colors.textMuted,
     borderBottomWidth: 2,
     borderBottomColor: 'transparent',
   },
   tabActive: { color: colors.text, borderBottomColor: colors.brand },
-  errorBar: { backgroundColor: 'rgba(240,82,77,0.14)', paddingVertical: 10, paddingHorizontal: 20 },
-  errorText: { color: '#FF7A75', fontSize: 12.5 },
-  listContent: { paddingBottom: 32 },
+  errorBar: { backgroundColor: colors.redSoft, paddingVertical: 10, paddingHorizontal: 20 },
+  errorText: { color: colors.red, fontSize: 12.5 },
+  listContent: { paddingBottom: 96 },
   searchRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
     backgroundColor: colors.surface,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.08)',
+    borderColor: colors.border,
     borderRadius: 12,
     paddingHorizontal: 13,
     marginHorizontal: 20,
     marginTop: 14,
   },
-  searchGlyph: { color: '#5C6680', fontSize: 15 },
-  searchInput: { flex: 1, color: '#E8ECF4', fontSize: 14.5, paddingVertical: 12 },
-  clearGlyph: { color: '#5C6680', fontSize: 16 },
+  searchGlyph: { color: colors.textMuted, fontSize: 15 },
+  searchInput: { flex: 1, color: colors.text, fontSize: 14.5, paddingVertical: 12 },
+  clearGlyph: { color: colors.textMuted, fontSize: 16 },
   chipsRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -386,24 +386,24 @@ const styles = StyleSheet.create({
     borderRadius: 999,
     paddingVertical: 8,
     paddingHorizontal: 14,
-    backgroundColor: 'rgba(255,255,255,0.04)',
+    backgroundColor: colors.neutralSoft,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.08)',
+    borderColor: colors.border,
   },
-  chipActive: { backgroundColor: 'rgba(75,141,248,0.18)', borderColor: 'rgba(75,141,248,0.55)' },
-  chipText: { fontSize: 12.5, fontWeight: '600', color: '#8A93A8' },
-  chipTextActive: { color: '#A8C8FF' },
+  chipActive: { backgroundColor: colors.brandSoft, borderColor: colors.brandBorder },
+  chipText: { fontSize: 12.5, fontWeight: '600', color: colors.textMuted },
+  chipTextActive: { color: colors.brandText },
   chipCount: {
     fontSize: 11,
     color: colors.textDim,
-    backgroundColor: 'rgba(255,255,255,0.12)',
+    backgroundColor: colors.neutralSoft,
     borderRadius: 6,
     paddingHorizontal: 6,
     overflow: 'hidden',
   },
   countLine: {
     fontSize: 13,
-    color: '#8A93A8',
+    color: colors.textMuted,
     paddingHorizontal: 20,
     marginTop: 8,
     marginBottom: 4,

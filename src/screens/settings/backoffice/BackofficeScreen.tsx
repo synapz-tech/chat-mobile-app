@@ -7,7 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 import i18n from 'i18n';
 import { tailwind } from '@/theme';
 import { SettingsList } from '@/components-next';
-import { SwitchIcon } from '@/svg-icons';
+import { PhoneIcon } from '@/svg-icons';
 import type { GenericListType } from '@/types';
 
 export default function BackofficeScreen(): JSX.Element {
@@ -17,7 +17,7 @@ export default function BackofficeScreen(): JSX.Element {
     {
       hasChevron: true,
       title: i18n.t('BACKOFFICE.NETWORK_DIAGNOSTICS'),
-      icon: <SwitchIcon />,
+      icon: <PhoneIcon />,
       subtitle: i18n.t('BACKOFFICE.NETWORK_DIAGNOSTICS_DESC'),
       subtitleType: 'light',
       // @ts-expect-error navigation is typed loosely across stacks in this app

@@ -42,7 +42,7 @@ import { UserAvatar } from './components/UserAvatar';
 
 import { LANGUAGES, TAB_BAR_HEIGHT } from '@/constants';
 import { useRefsContext } from '@/context';
-import { ChatwootIcon, NotificationIcon, SwitchIcon, TranslateIcon } from '@/svg-icons';
+import { ChatwootIcon, GridIcon, NotificationIcon, SwitchIcon, TranslateIcon } from '@/svg-icons';
 import { GenericListType } from '@/types';
 
 import { authActions } from '@/store/auth/authActions';
@@ -260,7 +260,7 @@ const SettingsScreen = () => {
     {
       hasChevron: true,
       title: i18n.t('SETTINGS.BACKOFFICE'),
-      icon: <SwitchIcon />,
+      icon: <GridIcon />,
       subtitle: '',
       subtitleType: 'light',
       // @ts-expect-error navigation typed loosely across stacks

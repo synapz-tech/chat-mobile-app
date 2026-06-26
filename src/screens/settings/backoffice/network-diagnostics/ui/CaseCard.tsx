@@ -1,9 +1,14 @@
-import React, { useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import React, { useRef, useState } from 'react';
+import { Dimensions, Modal, Pressable, StyleSheet, Text, View } from 'react-native';
 import i18n from 'i18n';
 import type { NetworkCase } from '../data/types';
 import { caseDate, caseStatus, outcomeLabelKey, outcomeTone } from '../data/format';
 import { colors } from './theme';
+
+const MENU_WIDTH = 220;
+/** Approx. menu height for 3 items (each ~44px) plus padding. */
+const MENU_MAX_HEIGHT = 160;
+const SCREEN_MARGIN = 12;
 
 interface Props {
   item: NetworkCase;
@@ -14,25 +19,48 @@ interface Props {
 }
 
 const TONE_BG: Record<string, string> = {
-  warning: 'rgba(242,169,59,0.14)',
-  danger: 'rgba(240,82,77,0.14)',
-  info: 'rgba(75,141,248,0.14)',
-  neutral: 'rgba(255,255,255,0.05)',
+  warning: colors.amberSoft,
+  danger: colors.redSoft,
+  info: colors.brandSoft,
+  neutral: colors.neutralSoft,
 };
 const TONE_FG: Record<string, string> = {
   warning: colors.amber,
   danger: colors.red,
-  info: '#7FB0FF',
+  info: colors.brandText,
   neutral: colors.textDim,
 };
 
 export function CaseCard({ item, busy, onToggleStatus, onComment, onOpen }: Props): JSX.Element {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [menuPos, setMenuPos] = useState<{ top: number; left: number } | null>(null);
+  const btnRef = useRef<View>(null);
   const status = caseStatus(item);
   const resolved = status === 'resolvido';
   const t = outcomeTone(item.outcome);
   const label = outcomeLabelKey(item.outcome);
   const close = () => setMenuOpen(false);
+
+  const openMenu = () => {
+    const node = btnRef.current;
+    if (!node) {
+      setMenuPos(null);
+      setMenuOpen(true);
+      return;
+    }
+    node.measureInWindow((x, y, width, height) => {
+      const screen = Dimensions.get('window');
+      // Horizontal: align menu's right edge with the button's right edge.
+      let left = x + width - MENU_WIDTH;
+      left = Math.max(SCREEN_MARGIN, Math.min(left, screen.width - MENU_WIDTH - SCREEN_MARGIN));
+      // Vertical: open below the button, but flip above when not enough room.
+      const spaceBelow = screen.height - (y + height);
+      const openUp = spaceBelow < MENU_MAX_HEIGHT + SCREEN_MARGIN;
+      const top = openUp ? y - MENU_MAX_HEIGHT - 6 : y + height + 6;
+      setMenuPos({ top: Math.max(SCREEN_MARGIN, top), left });
+      setMenuOpen(true);
+    });
+  };
 
   return (
     <View style={styles.card}>
@@ -49,8 +77,9 @@ export function CaseCard({ item, busy, onToggleStatus, onComment, onOpen }: Prop
           </Text>
         </View>
         <Pressable
+          ref={btnRef}
           style={styles.menuBtn}
-          onPress={() => setMenuOpen(o => !o)}
+          onPress={openMenu}
           accessibilityLabel="Ações">
           <Text style={styles.menuGlyph}>⋯</Text>
         </Pressable>
@@ -71,10 +100,20 @@ export function CaseCard({ item, busy, onToggleStatus, onComment, onOpen }: Prop
         </View>
       </View>
 
-      {menuOpen && (
-        <>
-          <Pressable style={styles.backdrop} onPress={close} />
-          <View style={styles.menu}>
+      <Modal
+        visible={menuOpen}
+        transparent
+        animationType="fade"
+        onRequestClose={close}
+        statusBarTranslucent>
+        <Pressable style={styles.backdrop} onPress={close}>
+          <View
+            style={[
+              styles.menu,
+              menuPos
+                ? { top: menuPos.top, left: menuPos.left }
+                : { top: '40%', alignSelf: 'center' },
+            ]}>
             <MenuItem
               color={colors.green}
               glyph={resolved ? '↺' : '✓'}
@@ -112,8 +151,8 @@ export function CaseCard({ item, busy, onToggleStatus, onComment, onOpen }: Prop
               />
             )}
           </View>
-        </>
-      )}
+        </Pressable>
+      </Modal>
     </View>
   );
 }
@@ -155,11 +194,11 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   identity: { flex: 1, gap: 9, minWidth: 0 },
-  name: { fontSize: 15, fontWeight: '600', color: '#EAEFF8', lineHeight: 19 },
+  name: { fontSize: 15, fontWeight: '600', color: colors.text, lineHeight: 19 },
   churn: {
     alignSelf: 'flex-start',
-    backgroundColor: 'rgba(240,82,77,0.14)',
-    color: '#FF7A75',
+    backgroundColor: colors.redSoft,
+    color: colors.red,
     fontSize: 10,
     fontWeight: '700',
     paddingVertical: 4,
@@ -180,13 +219,13 @@ const styles = StyleSheet.create({
     width: 34,
     height: 34,
     borderRadius: 9,
-    backgroundColor: 'rgba(255,255,255,0.04)',
+    backgroundColor: colors.neutralSoft,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.08)',
+    borderColor: colors.border,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  menuGlyph: { color: '#AEB8CC', fontSize: 18, lineHeight: 18 },
+  menuGlyph: { color: colors.textDim, fontSize: 18, lineHeight: 18 },
   reason: { fontSize: 12.5, lineHeight: 18, color: colors.textDim },
   footer: {
     flexDirection: 'row',
@@ -206,20 +245,22 @@ const styles = StyleSheet.create({
     borderRadius: 999,
     overflow: 'hidden',
   },
-  statusPending: { backgroundColor: 'rgba(242,169,59,0.14)', color: colors.amber },
-  statusResolved: { backgroundColor: 'rgba(43,212,106,0.14)', color: colors.green },
-  backdrop: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 8 },
+  statusPending: { backgroundColor: colors.amberSoft, color: colors.amber },
+  statusResolved: { backgroundColor: colors.greenSoft, color: colors.green },
+  backdrop: { flex: 1 },
   menu: {
     position: 'absolute',
-    top: 46,
-    right: 14,
-    zIndex: 9,
-    width: 220,
+    width: MENU_WIDTH,
     backgroundColor: colors.menu,
     borderWidth: 1,
     borderColor: colors.borderStrong,
     borderRadius: 12,
     padding: 6,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.12,
+    shadowRadius: 16,
+    elevation: 8,
   },
   menuItem: {
     flexDirection: 'row',

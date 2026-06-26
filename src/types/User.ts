@@ -9,7 +9,7 @@ export type User = {
   account_id: number;
   accounts: Account[];
   email: string;
-  /** Chatwoot personal access token (from /profile) — used as Bearer for n8n. */
+  /** Chatwoot personal access token (from /profile) — sent as the `api_access_token` header for the n8n webhook. */
   access_token?: string;
   pubsub_token: string;
   avatar_url: string;

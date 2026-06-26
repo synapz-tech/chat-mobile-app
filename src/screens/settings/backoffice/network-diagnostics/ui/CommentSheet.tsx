@@ -61,7 +61,7 @@ export const CommentSheet = forwardRef<BottomSheetModal, Props>(function Comment
           onChangeText={setDraft}
           editable={!saving}
           placeholder={i18n.t('NETWORK_DIAGNOSTICS.COMMENT_PLACEHOLDER')}
-          placeholderTextColor="#5C6680"
+          placeholderTextColor={colors.textMuted}
         />
         <View style={styles.metaRow}>
           <Text style={styles.hint}>{i18n.t('NETWORK_DIAGNOSTICS.COMMENT_CLEAR_HINT')}</Text>
@@ -104,7 +104,7 @@ export const CommentSheet = forwardRef<BottomSheetModal, Props>(function Comment
           </Pressable>
           <Pressable style={styles.saveBtn} onPress={() => onSave(draft.trim())} disabled={saving}>
             {saving ? (
-              <ActivityIndicator color="#06122B" />
+              <ActivityIndicator color={colors.onBrand} />
             ) : (
               <Text style={styles.saveText}>{i18n.t('NETWORK_DIAGNOSTICS.COMMENT_SAVE')}</Text>
             )}
@@ -117,7 +117,7 @@ export const CommentSheet = forwardRef<BottomSheetModal, Props>(function Comment
 
 const styles = StyleSheet.create({
   sheetBg: { backgroundColor: colors.sheet },
-  handle: { backgroundColor: 'rgba(255,255,255,0.18)', width: 38 },
+  handle: { backgroundColor: colors.borderStrong, width: 38 },
   body: { padding: 20, paddingBottom: 40 },
   title: { fontSize: 17, fontWeight: '700', color: colors.text },
   client: { fontSize: 12.5, color: colors.textDim, marginTop: 5, marginBottom: 14 },
@@ -125,10 +125,10 @@ const styles = StyleSheet.create({
     minHeight: 120,
     backgroundColor: colors.surface,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.1)',
+    borderColor: colors.border,
     borderRadius: 13,
     padding: 14,
-    color: '#E8ECF4',
+    color: colors.text,
     fontSize: 14.5,
     textAlignVertical: 'top',
   },
@@ -139,19 +139,19 @@ const styles = StyleSheet.create({
   history: { marginTop: 18, gap: 8 },
   historyTitle: { fontSize: 12, fontWeight: '600', color: colors.textDim },
   historyItem: { gap: 2 },
-  historyAction: { fontSize: 13, color: '#E8ECF4' },
+  historyAction: { fontSize: 13, color: colors.text },
   historyMeta: { fontSize: 11, color: colors.textMuted },
   actions: { flexDirection: 'row', gap: 10, marginTop: 18 },
   cancelBtn: {
     flex: 1,
-    backgroundColor: 'rgba(255,255,255,0.05)',
+    backgroundColor: colors.neutralSoft,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.1)',
+    borderColor: colors.border,
     borderRadius: 13,
     padding: 15,
     alignItems: 'center',
   },
-  cancelText: { color: '#C7D0E0', fontSize: 14, fontWeight: '600' },
+  cancelText: { color: colors.textDim, fontSize: 14, fontWeight: '600' },
   saveBtn: {
     flex: 2,
     backgroundColor: colors.brand,
@@ -159,5 +159,5 @@ const styles = StyleSheet.create({
     padding: 15,
     alignItems: 'center',
   },
-  saveText: { color: '#06122B', fontSize: 14, fontWeight: '700' },
+  saveText: { color: colors.onBrand, fontSize: 14, fontWeight: '700' },
 });

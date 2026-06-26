@@ -1,5 +1,12 @@
 import i18n from '@/i18n';
-import remoteConfig from '@react-native-firebase/remote-config';
+import { getApp } from '@react-native-firebase/app';
+import {
+  fetchAndActivate,
+  getRemoteConfig,
+  getValue,
+  setConfigSettings,
+  setDefaults,
+} from '@react-native-firebase/remote-config';
 import * as Application from 'expo-application';
 import { Alert } from 'react-native';
 
@@ -17,18 +24,20 @@ export class VersionCheckService {
    */
   static async initialize(): Promise<void> {
     try {
+      const remoteConfig = getRemoteConfig(getApp());
+
       // Set default values
-      await remoteConfig().setDefaults({
+      await setDefaults(remoteConfig, {
         [this.MIN_VERSION_KEY]: '0.0.0',
       });
 
       // Set config settings
-      await remoteConfig().setConfigSettings({
+      await setConfigSettings(remoteConfig, {
         minimumFetchIntervalMillis: 300000, // 5 minutes
       });
 
       // Fetch and activate remote config
-      await remoteConfig().fetchAndActivate();
+      await fetchAndActivate(remoteConfig);
     } catch (error) {
       console.error('Error initializing Remote Config:', error);
     }
@@ -40,7 +49,7 @@ export class VersionCheckService {
   static async checkVersion(): Promise<VersionCheckResult> {
     try {
       const currentVersion = Application.nativeApplicationVersion || '0.0.0';
-      const minVersion = remoteConfig().getValue(this.MIN_VERSION_KEY).asString();
+      const minVersion = getValue(getRemoteConfig(getApp()), this.MIN_VERSION_KEY).asString();
 
       const isVersionSupported = this.compareVersions(currentVersion, minVersion) >= 0;
 

@@ -80,12 +80,19 @@ export function useNetworkDiagnostics(): UseNetworkDiagnostics {
   });
   useEffect(() => {
     genRef.current += 1;
-    if (!ready) return;
+    if (!ready) {
+      return;
+    }
     let active = true;
     dispatch({ type: 'LIST_LOADING' });
-    fetchNetworkCases(token as string, accountId as number, { ...listParams(), page: 1 })
-      .then(r => active && dispatch({ type: 'LIST_SUCCESS', append: false, response: r }))
-      .catch(e => active && dispatch({ type: 'LIST_ERROR', error: msg(e) }));
+    const params = { ...listParams(), page: 1 };
+    fetchNetworkCases(token as string, accountId as number, params)
+      .then(r => {
+        return active && dispatch({ type: 'LIST_SUCCESS', append: false, response: r });
+      })
+      .catch(e => {
+        return active && dispatch({ type: 'LIST_ERROR', error: msg(e) });
+      });
     return () => {
       active = false;
     };
@@ -94,12 +101,18 @@ export function useNetworkDiagnostics(): UseNetworkDiagnostics {
 
   // Stats: only depend on the date range.
   useEffect(() => {
-    if (!ready) return;
+    if (!ready) {
+      return;
+    }
     let active = true;
     dispatch({ type: 'STATS_LOADING' });
     fetchNetworkStats(token as string, accountId as number, state.from, state.to)
-      .then(r => active && dispatch({ type: 'STATS_SUCCESS', stats: r.stats }))
-      .catch(e => active && dispatch({ type: 'STATS_ERROR', error: msg(e) }));
+      .then(r => {
+        return active && dispatch({ type: 'STATS_SUCCESS', stats: r.stats });
+      })
+      .catch(e => {
+        return active && dispatch({ type: 'STATS_ERROR', error: msg(e) });
+      });
     return () => {
       active = false;
     };
