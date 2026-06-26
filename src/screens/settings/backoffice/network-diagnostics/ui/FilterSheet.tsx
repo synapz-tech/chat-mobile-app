@@ -1,6 +1,11 @@
-import React, { forwardRef } from 'react';
+import React, { forwardRef, useCallback } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { BottomSheetModal, BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import {
+  BottomSheetModal,
+  BottomSheetScrollView,
+  BottomSheetBackdrop,
+  type BottomSheetBackdropProps,
+} from '@gorhom/bottom-sheet';
 import i18n from 'i18n';
 import { isoDate } from '../data/format';
 import { DEFAULT_RANGE_DAYS, type DiagnosticsState, type FilterKey } from '../data/reducer';
@@ -75,11 +80,19 @@ export const FilterSheet = forwardRef<BottomSheetModal, Props>(function FilterSh
   { state, setRange, setFilter, clearFilters, total, onClose },
   ref,
 ) {
+  const renderBackdrop = useCallback(
+    (props: BottomSheetBackdropProps) => (
+      <BottomSheetBackdrop {...props} appearsOnIndex={0} disappearsOnIndex={-1} opacity={0.4} />
+    ),
+    [],
+  );
+
   return (
     <BottomSheetModal
       ref={ref}
       enablePanDownToClose
       snapPoints={['85%']}
+      backdropComponent={renderBackdrop}
       handleIndicatorStyle={styles.handle}
       backgroundStyle={styles.sheetBg}>
       <BottomSheetScrollView contentContainerStyle={styles.body}>
@@ -148,7 +161,16 @@ export const FilterSheet = forwardRef<BottomSheetModal, Props>(function FilterSh
 });
 
 const styles = StyleSheet.create({
-  sheetBg: { backgroundColor: colors.sheet },
+  sheetBg: {
+    backgroundColor: colors.sheet,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: -4 },
+    shadowOpacity: 0.16,
+    shadowRadius: 24,
+    elevation: 24,
+  },
   handle: { backgroundColor: colors.borderStrong, width: 38 },
   body: { padding: 20, paddingBottom: 40 },
   title: {

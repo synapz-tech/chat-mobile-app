@@ -15,6 +15,8 @@ import { StackActions, useNavigation } from '@react-navigation/native';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import i18n from 'i18n';
 import { useAppDispatch } from '@/hooks';
+import { Icon } from '@/components-next/common/icon';
+import { FilterIcon, SearchIcon, CloseIcon } from '@/svg-icons';
 import { conversationActions } from '@/store/conversation/conversationActions';
 import { showToast } from '@/utils/toastUtils';
 import { useNetworkDiagnostics } from './useNetworkDiagnostics';
@@ -174,7 +176,7 @@ export default function NetworkDiagnosticsScreen(): JSX.Element {
             <Text style={styles.title}>{i18n.t('NETWORK_DIAGNOSTICS.TITLE')}</Text>
           </View>
           <Pressable style={styles.filterBtn} onPress={() => filterRef.current?.present()}>
-            <Text style={styles.filterGlyph}>⚙</Text>
+            <Icon icon={<FilterIcon stroke={colors.textDim} />} size={20} />
             {filterActive && <View style={styles.filterDot} />}
           </Pressable>
         </View>
@@ -203,7 +205,7 @@ export default function NetworkDiagnosticsScreen(): JSX.Element {
       {tab === 'casos' && (
         <>
           <View style={styles.searchRow}>
-            <Text style={styles.searchGlyph}>⌕</Text>
+            <Icon icon={<SearchIcon stroke={colors.textMuted} />} size={16} />
             <TextInput
               style={styles.searchInput}
               value={search}
@@ -212,8 +214,8 @@ export default function NetworkDiagnosticsScreen(): JSX.Element {
               placeholderTextColor={colors.textMuted}
             />
             {!!search && (
-              <Pressable onPress={() => setSearch('')}>
-                <Text style={styles.clearGlyph}>✕</Text>
+              <Pressable hitSlop={8} onPress={() => setSearch('')}>
+                <Icon icon={<CloseIcon stroke={colors.textMuted} />} size={16} />
               </Pressable>
             )}
           </View>
@@ -332,7 +334,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  filterGlyph: { color: colors.textDim, fontSize: 18 },
   filterDot: {
     position: 'absolute',
     top: -3,
@@ -369,9 +370,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     marginTop: 14,
   },
-  searchGlyph: { color: colors.textMuted, fontSize: 15 },
   searchInput: { flex: 1, color: colors.text, fontSize: 14.5, paddingVertical: 12 },
-  clearGlyph: { color: colors.textMuted, fontSize: 16 },
   chipsRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',

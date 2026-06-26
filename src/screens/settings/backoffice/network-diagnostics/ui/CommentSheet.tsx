@@ -1,9 +1,11 @@
-import React, { forwardRef, useEffect, useState } from 'react';
+import React, { forwardRef, useCallback, useEffect, useState } from 'react';
 import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
 import {
   BottomSheetModal,
   BottomSheetScrollView,
   BottomSheetTextInput,
+  BottomSheetBackdrop,
+  type BottomSheetBackdropProps,
 } from '@gorhom/bottom-sheet';
 import i18n from 'i18n';
 import type { NetworkCase, NetworkCaseEditEntry } from '../data/types';
@@ -39,11 +41,19 @@ export const CommentSheet = forwardRef<BottomSheetModal, Props>(function Comment
 
   const history = item ? parseEditHistory(item.edit_history).slice().reverse() : [];
 
+  const renderBackdrop = useCallback(
+    (props: BottomSheetBackdropProps) => (
+      <BottomSheetBackdrop {...props} appearsOnIndex={0} disappearsOnIndex={-1} opacity={0.4} />
+    ),
+    [],
+  );
+
   return (
     <BottomSheetModal
       ref={ref}
       enablePanDownToClose
       snapPoints={['70%']}
+      backdropComponent={renderBackdrop}
       handleIndicatorStyle={styles.handle}
       backgroundStyle={styles.sheetBg}
       keyboardBehavior="interactive">
@@ -116,7 +126,16 @@ export const CommentSheet = forwardRef<BottomSheetModal, Props>(function Comment
 });
 
 const styles = StyleSheet.create({
-  sheetBg: { backgroundColor: colors.sheet },
+  sheetBg: {
+    backgroundColor: colors.sheet,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: -4 },
+    shadowOpacity: 0.16,
+    shadowRadius: 24,
+    elevation: 24,
+  },
   handle: { backgroundColor: colors.borderStrong, width: 38 },
   body: { padding: 20, paddingBottom: 40 },
   title: { fontSize: 17, fontWeight: '700', color: colors.text },

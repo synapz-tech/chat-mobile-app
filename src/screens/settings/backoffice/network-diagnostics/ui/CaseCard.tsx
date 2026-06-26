@@ -1,6 +1,8 @@
 import React, { useRef, useState } from 'react';
 import { Dimensions, Modal, Pressable, StyleSheet, Text, View } from 'react-native';
 import i18n from 'i18n';
+import { Icon } from '@/components-next/common/icon';
+import { Overflow, WarningIcon, ChatIcon, ResolvedIcon, PendingIcon, LinkIcon } from '@/svg-icons';
 import type { NetworkCase } from '../data/types';
 import { caseDate, caseStatus, outcomeLabelKey, outcomeTone } from '../data/format';
 import { colors } from './theme';
@@ -70,7 +72,10 @@ export function CaseCard({ item, busy, onToggleStatus, onComment, onOpen }: Prop
             {item.cliente_nome || i18n.t('NETWORK_DIAGNOSTICS.ANONYMOUS')}
           </Text>
           {item.churn_risk && (
-            <Text style={styles.churn}>⚠ {i18n.t('NETWORK_DIAGNOSTICS.CHURN_RISK')}</Text>
+            <View style={styles.churn}>
+              <Icon icon={<WarningIcon stroke={colors.red} />} size={12} />
+              <Text style={styles.churnText}>{i18n.t('NETWORK_DIAGNOSTICS.CHURN_RISK')}</Text>
+            </View>
           )}
           <Text style={[styles.outcome, { backgroundColor: TONE_BG[t], color: TONE_FG[t] }]}>
             {label.startsWith('NETWORK_DIAGNOSTICS.') ? i18n.t(label) : label}
@@ -81,7 +86,7 @@ export function CaseCard({ item, busy, onToggleStatus, onComment, onOpen }: Prop
           style={styles.menuBtn}
           onPress={openMenu}
           accessibilityLabel="Ações">
-          <Text style={styles.menuGlyph}>⋯</Text>
+          <Icon icon={<Overflow stroke={colors.textDim} />} size={18} />
         </Pressable>
       </View>
 
@@ -90,7 +95,7 @@ export function CaseCard({ item, busy, onToggleStatus, onComment, onOpen }: Prop
       <View style={styles.footer}>
         <Text style={styles.date}>{caseDate(item)}</Text>
         <View style={styles.footerRight}>
-          {!!item.comentario && <Text style={styles.commentDot}>💬</Text>}
+          {!!item.comentario && <Icon icon={<ChatIcon stroke={colors.textMuted} />} size={14} />}
           <Text
             style={[styles.statusBadge, resolved ? styles.statusResolved : styles.statusPending]}>
             {resolved
@@ -116,7 +121,13 @@ export function CaseCard({ item, busy, onToggleStatus, onComment, onOpen }: Prop
             ]}>
             <MenuItem
               color={colors.green}
-              glyph={resolved ? '↺' : '✓'}
+              icon={
+                resolved ? (
+                  <PendingIcon stroke={colors.green} />
+                ) : (
+                  <ResolvedIcon stroke={colors.green} />
+                )
+              }
               label={
                 resolved
                   ? i18n.t('NETWORK_DIAGNOSTICS.MENU_REOPEN')
@@ -130,7 +141,7 @@ export function CaseCard({ item, busy, onToggleStatus, onComment, onOpen }: Prop
             />
             <MenuItem
               color={colors.text}
-              glyph="💬"
+              icon={<ChatIcon stroke={colors.text} />}
               label={i18n.t('NETWORK_DIAGNOSTICS.MENU_COMMENT')}
               disabled={busy}
               onPress={() => {
@@ -141,7 +152,7 @@ export function CaseCard({ item, busy, onToggleStatus, onComment, onOpen }: Prop
             {onOpen && (
               <MenuItem
                 color={colors.text}
-                glyph="↗"
+                icon={<LinkIcon />}
                 label={i18n.t('NETWORK_DIAGNOSTICS.MENU_OPEN')}
                 disabled={false}
                 onPress={() => {
@@ -159,20 +170,22 @@ export function CaseCard({ item, busy, onToggleStatus, onComment, onOpen }: Prop
 
 function MenuItem({
   color,
-  glyph,
+  icon,
   label,
   disabled,
   onPress,
 }: {
   color: string;
-  glyph: string;
+  icon: React.ReactNode;
   label: string;
   disabled: boolean;
   onPress: () => void;
 }): JSX.Element {
   return (
     <Pressable style={styles.menuItem} onPress={onPress} disabled={disabled}>
-      <Text style={[styles.menuItemGlyph, { color }]}>{glyph}</Text>
+      <View style={styles.menuItemIcon}>
+        <Icon icon={icon} size={16} />
+      </View>
       <Text style={[styles.menuItemLabel, { color }]}>{label}</Text>
     </Pressable>
   );
@@ -196,15 +209,19 @@ const styles = StyleSheet.create({
   identity: { flex: 1, gap: 9, minWidth: 0 },
   name: { fontSize: 15, fontWeight: '600', color: colors.text, lineHeight: 19 },
   churn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
     alignSelf: 'flex-start',
     backgroundColor: colors.redSoft,
-    color: colors.red,
-    fontSize: 10,
-    fontWeight: '700',
     paddingVertical: 4,
     paddingHorizontal: 8,
     borderRadius: 7,
-    overflow: 'hidden',
+  },
+  churnText: {
+    color: colors.red,
+    fontSize: 10,
+    fontWeight: '700',
   },
   outcome: {
     alignSelf: 'flex-start',
@@ -225,7 +242,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  menuGlyph: { color: colors.textDim, fontSize: 18, lineHeight: 18 },
   reason: { fontSize: 12.5, lineHeight: 18, color: colors.textDim },
   footer: {
     flexDirection: 'row',
@@ -236,7 +252,6 @@ const styles = StyleSheet.create({
   },
   date: { fontSize: 11.5, color: colors.textMuted },
   footerRight: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  commentDot: { fontSize: 11 },
   statusBadge: {
     fontSize: 11,
     fontWeight: '600',
@@ -247,7 +262,7 @@ const styles = StyleSheet.create({
   },
   statusPending: { backgroundColor: colors.amberSoft, color: colors.amber },
   statusResolved: { backgroundColor: colors.greenSoft, color: colors.green },
-  backdrop: { flex: 1 },
+  backdrop: { flex: 1, backgroundColor: 'rgba(0,0,0,0.35)' },
   menu: {
     position: 'absolute',
     width: MENU_WIDTH,
@@ -257,10 +272,10 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: 6,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.12,
-    shadowRadius: 16,
-    elevation: 8,
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.22,
+    shadowRadius: 24,
+    elevation: 16,
   },
   menuItem: {
     flexDirection: 'row',
@@ -270,6 +285,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     borderRadius: 8,
   },
-  menuItemGlyph: { width: 18, textAlign: 'center', fontSize: 14 },
+  menuItemIcon: { width: 18, height: 18, alignItems: 'center', justifyContent: 'center' },
   menuItemLabel: { fontSize: 13.5, fontWeight: '500' },
 });
