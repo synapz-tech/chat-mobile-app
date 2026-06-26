@@ -1,29 +1,29 @@
-import React, { useCallback, useRef } from 'react';
-import { ActivityIndicator, Linking, StyleSheet, View } from 'react-native';
 import messaging from '@react-native-firebase/messaging';
 import { getStateFromPath } from '@react-navigation/native';
-import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
+import React, { useCallback, useRef } from 'react';
+import { ActivityIndicator, Linking, StyleSheet, View } from 'react-native';
+import { KeyboardProvider } from 'react-native-keyboard-controller';
 
-import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
-import { NavigationContainer } from '@react-navigation/native';
-import { AppTabs } from './tabs/AppTabs';
-import i18n from 'i18n';
-import { navigationRef } from '@/utils/navigationUtils';
-import { findConversationLinkFromPush, findNotificationFromFCM } from '@/utils/pushUtils';
-import { extractConversationIdFromUrl } from '@/utils/conversationUtils';
-import { useAppSelector } from '@/hooks';
-import { selectInstallationUrl, selectLocale } from '@/store/settings/settingsSelectors';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { RefsProvider } from '@/context';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { transformNotification } from '@/utils/camelCaseKeys';
 import Inter40020 from '@/assets/fonts/Inter-400-20.ttf';
 import Inter42020 from '@/assets/fonts/Inter-420-20.ttf';
 import Inter50024 from '@/assets/fonts/Inter-500-24.ttf';
 import Inter58024 from '@/assets/fonts/Inter-580-24.ttf';
 import Inter60020 from '@/assets/fonts/Inter-600-20.ttf';
+import { RefsProvider } from '@/context';
+import { useAppSelector } from '@/hooks';
+import { selectInstallationUrl, selectLocale } from '@/store/settings/settingsSelectors';
+import { transformNotification } from '@/utils/camelCaseKeys';
+import { extractConversationIdFromUrl } from '@/utils/conversationUtils';
+import { navigationRef } from '@/utils/navigationUtils';
+import { findConversationLinkFromPush, findNotificationFromFCM } from '@/utils/pushUtils';
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
+import { NavigationContainer } from '@react-navigation/native';
+import i18n from 'i18n';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { AppTabs } from './tabs/AppTabs';
 
 messaging().setBackgroundMessageHandler(async remoteMessage => {
   console.log('Message handled in the background!', remoteMessage);
