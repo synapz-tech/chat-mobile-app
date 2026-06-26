@@ -220,6 +220,15 @@ describe('Auth Slice', () => {
       expect(state.error).toBe(error);
     });
 
+    it('getProfile.fulfilled lands access_token on state.user', () => {
+      const action = {
+        type: authActions.getProfile.fulfilled.type,
+        payload: { access_token: 'tok_abc' },
+      };
+      const state = authReducer(loggedInState, action);
+      expect(state.user?.access_token).toBe('tok_abc');
+    });
+
     it('should merge user data when setActiveAccount succeeds', () => {
       const state = { ...initialState, user: { ...userWithAccounts, account_id: 123 } };
       const action = {

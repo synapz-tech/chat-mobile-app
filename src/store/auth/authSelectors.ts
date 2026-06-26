@@ -50,6 +50,8 @@ export const selectCurrentUserAccount = createSelector(selectAuth, auth => {
   return currentAccount;
 });
 
+export const selectAccessToken = createSelector(selectAuth, auth => auth.user?.access_token);
+
 export const selectMfaToken = createSelector(selectAuth, auth => auth.mfaToken);
 
 export const selectIsMfaRequired = createSelector(selectAuth, auth => auth.mfaToken !== null);

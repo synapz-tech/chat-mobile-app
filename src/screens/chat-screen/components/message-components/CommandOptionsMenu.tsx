@@ -134,7 +134,7 @@ const handleAttachFile = async dispatch => {
         documentPickerTypes.pptx,
         documentPickerTypes.xls,
         documentPickerTypes.xlsx,
-      ],
+      ].flat(), // You can specify the file types you want to allow
       presentationStyle: 'formSheet',
     });
     // TODO: Support multiple files

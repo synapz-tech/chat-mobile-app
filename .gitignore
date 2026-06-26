@@ -41,3 +41,8 @@ google-services.json
 GoogleService-Info.plist
 .env
 .env.local
+
+# local agent / scratch files
+.claude/
+fcm-token.txt
+Diagnostico de Rede - Mobile.html
