@@ -86,9 +86,20 @@ export const settingsActions = {
     NotificationSettingsPayload
   >('settings/updateNotificationSettings', SettingsService.updateNotificationSettings),
 
-  getChatwootVersion: createSettingsThunk<{ version: string }, { installationUrl: string }>(
+  // Background/informational call (used only for server-support checks).
+  // It must never surface a toast on failure, otherwise a transient transport
+  // failure shows a raw "Network Error" toast (e.g. right after switching accounts).
+  getChatwootVersion: createAsyncThunk<{ version: string }, { installationUrl: string }>(
     'settings/getChatwootVersion',
-    ({ installationUrl }) => SettingsService.getChatwootVersion(installationUrl),
+    async ({ installationUrl }, { rejectWithValue }) => {
+      try {
+        return await SettingsService.getChatwootVersion(installationUrl);
+      } catch (error) {
+        return rejectWithValue(
+          error instanceof Error ? error.message : 'Error fetching server version',
+        );
+      }
+    },
   ),
 
   saveDeviceDetails: createAsyncThunk<{ fcmToken: string }, void>(

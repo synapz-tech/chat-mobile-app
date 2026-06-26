@@ -51,8 +51,41 @@ interface FCMMessage {
   data?: {
     payload?: string;
     notification?: string;
+    type?: string;
+    account_id?: string;
+    id_login?: string;
+    churn_risk_score?: string;
   };
 }
+
+export interface ChurnRiskNotificationData {
+  accountId?: string;
+  idLogin?: string;
+  churnRiskScore?: string;
+}
+
+/**
+ * Detects a "churn_risk" push notification and returns its (camelCased) data.
+ * Returns null when the message is not a churn_risk notification.
+ *
+ * The churn_risk push delivers its fields directly on `message.data`
+ * (not wrapped in a JSON `payload`/`notification` string like Chatwoot pushes).
+ */
+export const findChurnRiskFromPush = ({
+  message,
+}: {
+  message: FCMMessage;
+}): ChurnRiskNotificationData | null => {
+  if (message?.data?.type !== 'churn_risk') {
+    return null;
+  }
+
+  return {
+    accountId: message.data.account_id,
+    idLogin: message.data.id_login,
+    churnRiskScore: message.data.churn_risk_score,
+  };
+};
 
 export const findNotificationFromFCM = ({ message }: { message: FCMMessage }) => {
   let notification = null;
@@ -62,7 +95,7 @@ export const findNotificationFromFCM = ({ message }: { message: FCMMessage }) =>
     notification = parsedPayload.data.notification;
   }
   // FCM legacy. It will be deprecated soon
-  else {
+  else if (message?.data?.notification) {
     notification = JSON.parse(message.data.notification);
   }
   return notification;

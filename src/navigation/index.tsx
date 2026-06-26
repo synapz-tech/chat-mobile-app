@@ -25,7 +25,11 @@ import { selectInstallationUrl, selectLocale } from '@/store/settings/settingsSe
 import { transformNotification } from '@/utils/camelCaseKeys';
 import { extractConversationIdFromUrl } from '@/utils/conversationUtils';
 import { navigationRef } from '@/utils/navigationUtils';
-import { findConversationLinkFromPush, findNotificationFromFCM } from '@/utils/pushUtils';
+import {
+  findChurnRiskFromPush,
+  findConversationLinkFromPush,
+  findNotificationFromFCM,
+} from '@/utils/pushUtils';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { NavigationContainer } from '@react-navigation/native';
 import i18n from 'i18n';
@@ -36,6 +40,21 @@ import { AppTabs } from './tabs/AppTabs';
 setBackgroundMessageHandler(getMessaging(getApp()), async remoteMessage => {
   console.log('Message handled in the background!', remoteMessage);
 });
+
+/**
+ * Navigates to the Network Diagnostics screen.
+ * Retries briefly while the NavigationContainer mounts, which is required when
+ * the app is launched from a quit state by tapping a churn_risk notification.
+ */
+const navigateToNetworkDiagnostics = (attempt = 0) => {
+  if (navigationRef.current?.isReady()) {
+    navigationRef.current.navigate('NetworkDiagnosticsScreen');
+    return;
+  }
+  if (attempt < 20) {
+    setTimeout(() => navigateToNetworkDiagnostics(attempt + 1), 250);
+  }
+};
 
 export const AppNavigationContainer = () => {
   const [fontsLoaded] = useFonts({
@@ -66,8 +85,8 @@ export const AppNavigationContainer = () => {
         },
       },
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     // getStateFromPath: App running, receives deep link - handles SSO callbacks and conversation navigation
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     getStateFromPath: (path: string, config: any) => {
       // Handle SSO callback - App running, receives deep link
       if (path.includes(SSO_CALLBACK_URL) || path.includes('auth/saml')) {
@@ -129,6 +148,12 @@ export const AppNavigationContainer = () => {
       const message = await getInitialNotification(getMessaging(getApp()));
 
       if (message) {
+        // churn_risk notifications open the Network Diagnostics screen.
+        if (findChurnRiskFromPush({ message })) {
+          navigateToNetworkDiagnostics();
+          return undefined;
+        }
+
         const notification = findNotificationFromFCM({ message });
         const camelCaseNotification = transformNotification(notification);
         const conversationLink = findConversationLinkFromPush({
@@ -160,6 +185,12 @@ export const AppNavigationContainer = () => {
       //onNotificationOpenedApp: When the application is running, but in the background.
       const unsubscribeNotification = onNotificationOpenedApp(getMessaging(getApp()), message => {
         if (message) {
+          // churn_risk notifications open the Network Diagnostics screen.
+          if (findChurnRiskFromPush({ message })) {
+            navigateToNetworkDiagnostics();
+            return;
+          }
+
           const notification = findNotificationFromFCM({ message });
           const camelCaseNotification = transformNotification(notification);
 

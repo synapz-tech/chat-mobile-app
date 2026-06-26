@@ -30,7 +30,13 @@ export class SettingsService {
   }
 
   static async getChatwootVersion(installationUrl: string): Promise<{ version: string }> {
-    const response = await axios.get(`${installationUrl}api`);
+    if (!installationUrl) {
+      return { version: '' };
+    }
+    // Normalize to avoid building an invalid URL (e.g. "https://host.comapi")
+    // when installationUrl has no trailing slash.
+    const baseUrl = installationUrl.endsWith('/') ? installationUrl : `${installationUrl}/`;
+    const response = await axios.get(`${baseUrl}api`);
     return response.data;
   }
 
