@@ -10,7 +10,9 @@ dos casos em risco de cancelamento (`churn_risk`) que foram **resolvidos** no
 período selecionado. A apresentação tem duas partes:
 
 1. **Card de destaque** no topo da aba Resumo, com o valor total em R$.
-2. **Linha de tendência por dia** sobreposta ao gráfico de barras existente.
+2. **Dois gráficos interativos por dia** (lib `react-native-gifted-charts`): um de
+   barras (casos por dia) e outro de linha/área (receita protegida por dia, R$),
+   cada um com tooltip por toque mostrando os valores do dia.
 
 A métrica vem de campos novos que o backend (webhook n8n `casos-diagnostico-rede`,
 action `stats`) já envia e que o app hoje ignora:
@@ -24,8 +26,23 @@ action `stats`) já envia e que o app hoje ignora:
 ## Escopo
 
 Mudança **somente no app mobile** (consumo). Nenhuma alteração no backend/n8n — os
-campos já existem na resposta de `stats`. A mudança é aditiva: nenhuma métrica ou
-componente existente muda de comportamento.
+campos já existem na resposta de `stats`. As métricas existentes mantêm seu
+significado; o gráfico de casos por dia (`TrendChart`) é reescrito internamente
+para usar a lib de chart, mas consome os mesmos dados e categorias de hoje.
+
+## Dependências
+
+- **`react-native-gifted-charts`** (`^1.4.77`) — gráficos de barra/linha em JS sobre
+  `react-native-svg` (já instalado, `^15.11.2`). Sem dep nativa nova de peso;
+  autolinkado pelo EAS. Escolhido por ter **tooltip/foco por toque** (mostra o valor
+  do dia ao tocar) — exatamente o que torna os valores diários legíveis no mobile.
+- **`expo-linear-gradient`** — peer da lib (usada nos preenchimentos de área/gradiente
+  e exigida em import). Instalar via `npx expo install expo-linear-gradient` (módulo
+  Expo SDK 53, sem config plugin / prebuild).
+- Descartado **`victory-native@41`**: exige `@shopify/react-native-skia` (dep nativa
+  pesada, não instalada) → risco no build EAS.
+
+Instalar com o gerenciador do projeto (pnpm) respeitando o lockfile.
 
 ## Camada de dados (`data/`)
 
@@ -66,26 +83,48 @@ os campos novos fluem automaticamente assim que entram no tipo.
 
 Props: `{ stats: NetworkStats | null; loading: boolean }` (espelha `StatCards`).
 
-## UI — Linha no gráfico (`ui/TrendChart.tsx`, estender)
+## UI — Gráfico de casos por dia (`ui/TrendChart.tsx`, reescrever)
 
-- Sobrepor uma linha de `valor_protegido` por dia às barras empilhadas existentes,
-  usando `react-native-svg` (`Polyline` + `Circle` nos pontos). A lib já é
-  dependência (`^15.11.2`).
-- **Escala própria**: a linha é normalizada pelo maior `valor_protegido` da janela
-  — unidade distinta das barras (R$ vs. contagem de casos). A linha comunica a
-  *forma/tendência* da receita protegida ao longo dos dias, **não** é comparável em
-  altura às barras. Quando `maxValor === 0`, não desenhar linha.
-- **Largura em pixels**: o container das barras hoje usa layout flex (colunas
-  `flex: 1` com `gap: 8`, sem x/width conhecidos). Capturar a largura via `onLayout`
-  e plotar cada ponto **centralizado sobre a coluna da barra** do dia:
-  `colWidth = (width - gap * (n - 1)) / n`, `x_i = i * (colWidth + gap) + colWidth / 2`,
-  `y = height - (v / maxValor) * height`. Para `n === 1`, centrar o único ponto
-  (`x = width / 2`).
-- **Cor dedicada**: o verde já é "Conexões observadas"; introduzir 1 token em
-  `theme.ts` (ex.: `protectedLine`, esmeralda `#059669`) para a linha + marcadores,
-  evitando confusão com as barras verdes.
-- Adicionar item de legenda `LEGEND_PROTEGIDO` ("Receita protegida") ao lado dos já
-  existentes (Offline / Instáveis / Conexões observadas), com a cor da linha.
+Substituir as barras feitas à mão por um **`BarChart` empilhado** do
+`react-native-gifted-charts`, preservando dados e semântica atuais.
+
+- Fonte: `zeroFillByDay(from, to, stats?.by_day)` (eixo X contínuo, mesmo com dias
+  zerados).
+- **Barras empilhadas por dia** com as 3 categorias atuais (cores do tema):
+  offline (`colors.red`), instáveis (`colors.amber`), conexões observadas
+  (`colors.green`). Mapear cada bucket para `stackData` do gifted-charts.
+- **Interação**: tocar uma barra/dia abre um tooltip com o detalhamento do dia —
+  data (`DD/MM`), total e a quebra por categoria. Usar o callback de toque por barra
+  da lib + estado local de "dia selecionado" + `renderTooltip`/componente próprio
+  estilizado com o tema.
+- **Eixo X em mobile**: com janelas longas (ex.: 30 dias) os rótulos lotam; mostrar
+  rótulo a cada N dias (ou rotacionar) e confiar no tooltip para o valor exato.
+  Largura fixada ao container; sem scroll horizontal por padrão.
+- Legenda mantém os 3 itens existentes (Offline / Instáveis / Conexões observadas).
+- Título/subtítulo: reutilizar `TREND_TITLE` / `TREND_SUBTITLE`.
+
+## UI — Gráfico de receita protegida por dia (`ui/RevenueChart.tsx`, novo)
+
+Gráfico separado, **abaixo** do de casos, dedicado ao R$/dia.
+
+- **`LineChart` (com área)** do gifted-charts plotando `valor_protegido` por dia a
+  partir do mesmo `zeroFillByDay`. Cor verde (`colors.green`) — consistente com o
+  card de destaque (receita = verde); como é um gráfico isolado, não há conflito com
+  as barras verdes do outro gráfico.
+- **Escala própria** em R$ (eixo Y independente do gráfico de casos — unidades
+  diferentes). Quando todos os `valor_protegido` forem 0, renderizar estado vazio
+  curto (linha rasa/baseline) sem quebrar.
+- **Interação**: `pointerConfig` do gifted-charts (toque/arraste) com
+  `pointerLabelComponent` mostrando `DD/MM` + `formatBRL(valor_protegido)` do dia.
+- Eixo Y rotulado em R$ (formato curto, ex.: `R$ 70`); rótulos do eixo X afinados
+  como no gráfico de casos.
+- Título: `REVENUE_TREND_TITLE`; subtítulo: `REVENUE_TREND_SUBTITLE`.
+- Props: `{ stats: NetworkStats | null; from: string; to: string }` (espelha
+  `TrendChart`).
+
+> Sem token de cor novo: o verde do tema (`colors.green`) cobre a receita; as cores
+> das barras já existem. A separação em dois gráficos elimina o problema de
+> dual-axis/colisão de cor da versão anterior do design.
 
 ## i18n (`i18n/pt.json`, `i18n/pt_BR.json`, `i18n/en.json`)
 
@@ -95,13 +134,18 @@ Novas chaves dentro de `NETWORK_DIAGNOSTICS`:
 |-------|------------|----|
 | `PROTECTED_TITLE` | `RECEITA PROTEGIDA` | `PROTECTED REVENUE` |
 | `PROTECTED_SUBTITLE` | `Mensalidade recuperada de casos em risco resolvidos no período.` | `Monthly revenue recovered from resolved at-risk cases in the period.` |
-| `LEGEND_PROTEGIDO` | `Receita protegida` | `Protected revenue` |
+| `REVENUE_TREND_TITLE` | `Receita protegida por dia` | `Protected revenue per day` |
+| `REVENUE_TREND_SUBTITLE` | `Toque em um dia para ver o valor.` | `Tap a day to see the amount.` |
+| `TREND_TAP_HINT` | `Toque em um dia para ver os detalhes.` | `Tap a day to see details.` |
 
 ## Tela (`NetworkDiagnosticsScreen.tsx`)
 
-No branch da aba `resumo` (hoje renderiza `<StatCards>` + `<TrendChart>`), inserir
-`<ProtectedRevenueCard stats={state.stats} loading={state.loadingStats} />` **antes**
-do `<StatCards>`.
+No branch da aba `resumo` (hoje renderiza `<StatCards>` + `<TrendChart>`):
+
+1. Inserir `<ProtectedRevenueCard stats={state.stats} loading={state.loadingStats} />`
+   **antes** do `<StatCards>`.
+2. Após `<TrendChart>` (casos por dia), renderizar
+   `<RevenueChart stats={state.stats} from={state.from} to={state.to} />`.
 
 ## Testes (`data/specs/format.spec.ts`)
 
@@ -118,20 +162,25 @@ Specs existentes não mudam (alterações aditivas).
 
 ## Arquivos
 
+- `package.json` / lockfile — `react-native-gifted-charts` + `expo-linear-gradient`.
 - `data/types.ts` — 2 campos.
 - `data/format.ts` — `formatBRL` + `EMPTY_BUCKET.valor_protegido`.
 - `data/specs/format.spec.ts` — testes.
-- `ui/ProtectedRevenueCard.tsx` — **novo**.
-- `ui/TrendChart.tsx` — linha + legenda.
-- `ui/theme.ts` — 1 token de cor (`protectedLine`).
-- `NetworkDiagnosticsScreen.tsx` — render do card na aba Resumo.
-- `i18n/pt.json`, `i18n/pt_BR.json`, `i18n/en.json` — 3 chaves cada.
+- `ui/ProtectedRevenueCard.tsx` — **novo** (card de destaque).
+- `ui/RevenueChart.tsx` — **novo** (linha/área de receita por dia).
+- `ui/TrendChart.tsx` — reescrito com `BarChart` + tooltip.
+- `NetworkDiagnosticsScreen.tsx` — render do card e do segundo gráfico na aba Resumo.
+- `i18n/pt.json`, `i18n/pt_BR.json`, `i18n/en.json` — chaves novas.
 
 ## Decisões registradas
 
-- **Subtítulo sem contagem**: o backend não envia a contagem de churn resolvidos,
-  apenas o valor em R$. Texto-ajuda fixo em vez de número fabricado.
-- **Linha em cor própria (esmeralda)**: evita confusão com as barras verdes
-  (Conexões observadas), mantendo o card de destaque em verde.
-- **Escala independente para a linha**: R$ e contagem de casos são unidades
-  diferentes; a linha mostra tendência, não magnitude comparável às barras.
+- **Lib de chart (`react-native-gifted-charts`)** em vez de SVG manual: o objetivo é
+  ler o valor de cada dia no mobile; o tooltip por toque resolve isso melhor que
+  rótulos espremidos. JS sobre `react-native-svg`, sem dep nativa nova de peso.
+- **Dois gráficos separados** (casos × receita) em vez de um combinado com
+  dual-axis: mais claro no mobile, cada gráfico com uma unidade só, sem colisão de
+  escala nem de cor.
+- **Subtítulo do card sem contagem**: o backend não envia a contagem de churn
+  resolvidos, apenas o valor em R$. Texto-ajuda fixo em vez de número fabricado.
+- **Receita em verde** (card e linha) consistente; como o gráfico de receita é
+  isolado, não conflita com as barras verdes (Conexões observadas) do outro gráfico.
