@@ -1,6 +1,6 @@
 {
   "name": "@synapzchat/mobile-app",
-  "version": "4.7.0",
+  "version": "4.7.1",
   "packageManager": "pnpm@10.11.0",
   "scripts": {
     "start": "expo start --dev-client",
@@ -74,6 +74,7 @@
     "expo-font": "~13.3.2",
     "expo-haptics": "~14.1.4",
     "expo-image": "~2.4.1",
+    "expo-linear-gradient": "~14.1.5",
     "expo-splash-screen": "~0.30.10",
     "expo-status-bar": "~2.2.3",
     "expo-system-ui": "~5.0.11",
@@ -90,6 +91,7 @@
     "react-native-file-viewer": "^2.1.5",
     "react-native-fs": "^2.20.0",
     "react-native-gesture-handler": "^2.31.2",
+    "react-native-gifted-charts": "^1.4.77",
     "react-native-image-modal": "^3.0.14",
     "react-native-image-picker": "^7.1.2",
     "react-native-ios-context-menu": "^3.1.0",

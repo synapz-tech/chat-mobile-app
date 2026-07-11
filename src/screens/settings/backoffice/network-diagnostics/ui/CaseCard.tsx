@@ -65,7 +65,8 @@ export function CaseCard({ item, busy, onToggleStatus, onComment, onOpen }: Prop
   };
 
   return (
-    <View style={styles.card}>
+    <View style={[styles.card, resolved && styles.cardResolved]}>
+      {resolved && <View style={styles.accent} />}
       <View style={styles.topRow}>
         <View style={styles.identity}>
           <Text style={styles.name}>
@@ -95,13 +96,29 @@ export function CaseCard({ item, busy, onToggleStatus, onComment, onOpen }: Prop
       <View style={styles.footer}>
         <Text style={styles.date}>{caseDate(item)}</Text>
         <View style={styles.footerRight}>
-          {!!item.comentario && <Icon icon={<ChatIcon stroke={colors.textMuted} />} size={14} />}
-          <Text
+          {!!item.comentario && (
+            <View style={styles.commentChip}>
+              <Icon icon={<ChatIcon stroke={colors.textMuted} />} size={13} />
+            </View>
+          )}
+          <View
             style={[styles.statusBadge, resolved ? styles.statusResolved : styles.statusPending]}>
-            {resolved
-              ? i18n.t('NETWORK_DIAGNOSTICS.STATUS_RESOLVED')
-              : i18n.t('NETWORK_DIAGNOSTICS.STATUS_PENDING')}
-          </Text>
+            <Icon
+              icon={
+                resolved ? (
+                  <ResolvedIcon stroke={colors.green} />
+                ) : (
+                  <PendingIcon stroke={colors.amber} />
+                )
+              }
+              size={12}
+            />
+            <Text style={[styles.statusText, { color: resolved ? colors.green : colors.amber }]}>
+              {resolved
+                ? i18n.t('NETWORK_DIAGNOSTICS.STATUS_RESOLVED')
+                : i18n.t('NETWORK_DIAGNOSTICS.STATUS_PENDING')}
+            </Text>
+          </View>
         </View>
       </View>
 
@@ -200,6 +217,20 @@ const styles = StyleSheet.create({
     padding: 14,
     gap: 11,
   },
+  cardResolved: {
+    backgroundColor: colors.successSurface,
+    borderColor: colors.successBorder,
+  },
+  accent: {
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    bottom: 0,
+    width: 4,
+    borderTopLeftRadius: 15,
+    borderBottomLeftRadius: 15,
+    backgroundColor: colors.green,
+  },
   topRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -252,16 +283,25 @@ const styles = StyleSheet.create({
   },
   date: { fontSize: 11.5, color: colors.textMuted },
   footerRight: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  statusBadge: {
-    fontSize: 11,
-    fontWeight: '600',
+  commentChip: {
+    alignItems: 'center',
+    justifyContent: 'center',
     paddingVertical: 4,
-    paddingHorizontal: 10,
+    paddingHorizontal: 7,
     borderRadius: 999,
-    overflow: 'hidden',
+    backgroundColor: colors.neutralSoft,
   },
-  statusPending: { backgroundColor: colors.amberSoft, color: colors.amber },
-  statusResolved: { backgroundColor: colors.greenSoft, color: colors.green },
+  statusBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+    paddingVertical: 4,
+    paddingHorizontal: 9,
+    borderRadius: 999,
+  },
+  statusText: { fontSize: 11, fontWeight: '700' },
+  statusPending: { backgroundColor: colors.amberSoft },
+  statusResolved: { backgroundColor: colors.greenSoft },
   backdrop: { flex: 1, backgroundColor: 'rgba(0,0,0,0.35)' },
   menu: {
     position: 'absolute',

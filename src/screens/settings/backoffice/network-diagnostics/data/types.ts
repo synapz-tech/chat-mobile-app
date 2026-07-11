@@ -76,6 +76,8 @@ export interface NetworkDayBucket {
   offline: number;
   conexao_observada: number;
   transferido?: number;
+  /** R$ — receita protegida do dia (casos churn_risk resolvidos, por created_at). */
+  valor_protegido?: number;
 }
 
 export interface NetworkStats {
@@ -88,6 +90,8 @@ export interface NetworkStats {
   churn_risk?: number;
   resolvidos?: number;
   pendentes?: number;
+  /** R$ — soma da mensalidade dos casos churn_risk resolvidos no período. */
+  receita_protegida?: number;
   by_day?: NetworkDayBucket[];
 }
 

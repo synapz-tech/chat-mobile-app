@@ -31,6 +31,8 @@ export const colors = {
   amberSoft: 'rgba(217,119,6,0.14)',
   redSoft: 'rgba(220,38,38,0.12)',
   greenSoft: 'rgba(22,163,74,0.14)',
+  successSurface: 'rgba(22,163,74,0.05)', // subtle card tint for resolved cases
+  successBorder: 'rgba(22,163,74,0.28)', // border for resolved cases
   neutralSoft: 'rgba(0,0,0,0.04)',
 
   // On-brand contrast text (e.g. text over the brand-filled button)

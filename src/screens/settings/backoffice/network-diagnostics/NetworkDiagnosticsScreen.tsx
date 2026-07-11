@@ -25,7 +25,9 @@ import { caseStatus } from './data/format';
 import type { NetworkCase } from './data/types';
 import { colors } from './ui/theme';
 import { StatCards } from './ui/StatCards';
+import { ProtectedRevenueCard } from './ui/ProtectedRevenueCard';
 import { TrendChart } from './ui/TrendChart';
+import { RevenueChart } from './ui/RevenueChart';
 import { CaseCard } from './ui/CaseCard';
 import { FilterSheet } from './ui/FilterSheet';
 import { CommentSheet } from './ui/CommentSheet';
@@ -276,10 +278,13 @@ export default function NetworkDiagnosticsScreen(): JSX.Element {
             data={[0]}
             keyExtractor={() => 'resumo'}
             estimatedItemSize={500}
+            contentContainerStyle={styles.listContent}
             renderItem={() => (
               <View>
+                <ProtectedRevenueCard stats={state.stats} loading={state.loadingStats} />
                 <StatCards stats={state.stats} loading={state.loadingStats} />
                 <TrendChart stats={state.stats} from={state.from} to={state.to} />
+                <RevenueChart stats={state.stats} from={state.from} to={state.to} />
               </View>
             )}
           />

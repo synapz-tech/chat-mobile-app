@@ -75,6 +75,15 @@ export function isoDate(daysAgo = 0): string {
   return date.toISOString().slice(0, 10);
 }
 
+const BRL_FMT = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
+
+/** Formats a number as pt-BR currency (`R$ 1.234,56`), normalizing the locale's
+ * non-breaking/narrow spaces to a regular space. Empty/NaN → `R$ 0,00`. */
+export function formatBRL(value?: number): string {
+  const n = typeof value === 'number' && Number.isFinite(value) ? value : 0;
+  return BRL_FMT.format(n).replace(/[\u00A0\u202F]/g, ' ');
+}
+
 const EMPTY_BUCKET = (date: string): NetworkDayBucket => ({
   date,
   total: 0,
@@ -82,6 +91,7 @@ const EMPTY_BUCKET = (date: string): NetworkDayBucket => ({
   offline: 0,
   conexao_observada: 0,
   transferido: 0,
+  valor_protegido: 0,
 });
 
 /** One ascending bucket per day in [from, to], filling gaps with zeros. */

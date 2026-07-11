@@ -8,6 +8,7 @@ import {
   parseEditHistory,
   isoDate,
   zeroFillByDay,
+  formatBRL,
 } from '../format';
 
 describe('caseStatus', () => {
@@ -66,6 +67,21 @@ describe('isoDate', () => {
   });
 });
 
+describe('formatBRL', () => {
+  it('formats a value as pt-BR currency with a regular space', () => {
+    expect(formatBRL(210.5)).toBe('R$ 210,50');
+    expect(formatBRL(70)).toBe('R$ 70,00');
+  });
+  it('returns R$ 0,00 for zero, undefined and NaN', () => {
+    expect(formatBRL(0)).toBe('R$ 0,00');
+    expect(formatBRL(undefined)).toBe('R$ 0,00');
+    expect(formatBRL(NaN)).toBe('R$ 0,00');
+  });
+  it('rounds to two decimals', () => {
+    expect(formatBRL(210.555)).toBe('R$ 210,56');
+  });
+});
+
 describe('zeroFillByDay', () => {
   it('produces one ascending bucket per day, filling gaps with zeros', () => {
     const out = zeroFillByDay('2026-06-01', '2026-06-03', [
@@ -81,5 +97,21 @@ describe('zeroFillByDay', () => {
     expect(out.map(b => b.date)).toEqual(['2026-06-01', '2026-06-02', '2026-06-03']);
     expect(out[0].total).toBe(0);
     expect(out[1].total).toBe(5);
+  });
+
+  it('preserves valor_protegido and zero-fills gaps with valor_protegido 0', () => {
+    const out = zeroFillByDay('2026-06-01', '2026-06-03', [
+      {
+        date: '2026-06-02',
+        total: 1,
+        instaveis: 0,
+        offline: 0,
+        conexao_observada: 1,
+        valor_protegido: 70,
+      },
+    ]);
+    expect(out[0].valor_protegido).toBe(0);
+    expect(out[1].valor_protegido).toBe(70);
+    expect(out[2].valor_protegido).toBe(0);
   });
 });

@@ -4,7 +4,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
   return {
     name: 'Synapz Chat',
     slug: process.env.EXPO_PUBLIC_APP_SLUG || 'synapz-chat',
-    version: '4.7.0',
+    version: '4.7.1',
     orientation: 'portrait',
     icon: './assets/icon-new.png',
     userInterfaceStyle: 'light',
@@ -50,7 +50,6 @@ export default ({ config }: ConfigContext): ExpoConfig => {
         'android.permission.READ_EXTERNAL_STORAGE',
         'android.permission.WRITE_EXTERNAL_STORAGE',
         'android.permission.RECORD_AUDIO',
-        'android.permission.READ_MEDIA_IMAGES',
       ],
       // Please use the relative path to the google-services.json file
       googleServicesFile: process.env.EXPO_PUBLIC_ANDROID_GOOGLE_SERVICES_FILE,
@@ -106,13 +105,15 @@ export default ({ config }: ConfigContext): ExpoConfig => {
           android: {
             minSdkVersion: 24,
             compileSdkVersion: 35,
-            targetSdkVersion: 34,
+            targetSdkVersion: 35,
             enableProguardInReleaseBuilds: true,
           },
           ios: { useFrameworks: 'static' },
         },
       ],
       './with-ffmpeg-pod.js',
+      './with-remove-ad-id-permission.js',
+      './with-remove-media-permissions.js',
     ],
     androidNavigationBar: { backgroundColor: '#ffffff' },
   };

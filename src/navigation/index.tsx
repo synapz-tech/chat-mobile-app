@@ -48,7 +48,14 @@ setBackgroundMessageHandler(getMessaging(getApp()), async remoteMessage => {
  */
 const navigateToNetworkDiagnostics = (attempt = 0) => {
   if (navigationRef.current?.isReady()) {
-    navigationRef.current.navigate('NetworkDiagnosticsScreen');
+    // NetworkDiagnosticsScreen is nested: Tab -> Settings -> SettingsStack.
+    // Navigate through the full path so the root navigator can resolve it.
+    navigationRef.current.navigate('Tab', {
+      screen: 'Settings',
+      params: {
+        screen: 'NetworkDiagnosticsScreen',
+      },
+    });
     return;
   }
   if (attempt < 20) {
